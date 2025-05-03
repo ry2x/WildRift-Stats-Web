@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next.js
+.next
+out
+
+# Production
+build
+dist
+
+# Coverage reports
+coverage
+
+# Misc
+*.log
+.DS_Store
+.env*
+!.env.example
+
+# Package files
+package-lock.json
+pnpm-lock.yaml
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
