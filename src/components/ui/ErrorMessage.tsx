@@ -5,11 +5,13 @@ interface ErrorMessageProps {
   message: string;
   /** Optional retry handler */
   onRetry?: () => void;
+  /** Optional error object */
+  error?: Error | null;
 }
 
-export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
+export function ErrorMessage({ message, onRetry, error }: ErrorMessageProps) {
   return (
-    <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4 my-4">
+    <div className="rounded-md bg-red-50  p-4 my-4">
       <div className="flex">
         <div className="flex-shrink-0">
           {/* Error icon */}
@@ -26,11 +28,11 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
           </svg>
         </div>
         <div className="ml-3">
-          <p className="text-sm text-red-700 dark:text-red-200">{message}</p>
+          <p className="text-sm text-red-700 ">{message}</p>
           {onRetry && (
             <button
               onClick={onRetry}
-              className="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 font-medium"
+              className="mt-2 text-sm text-red-600  hover:text-red-500  font-medium"
             >
               再試行
             </button>
