@@ -1,23 +1,21 @@
-import { WinRates, RankRange } from '../types/stats';
+import axios from 'axios';
+import { WinRates } from '../types/stats';
 
 const STATS_API_URL =
   'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2';
 
 /**
- * Fetches champion stats data from the API directly
- * @param rank - Rank range to fetch statistics for
+ * Fetches champion stats data from the API
  * @returns Promise containing win rate data
  */
-export async function fetchStats(rank: RankRange = '0'): Promise<WinRates> {
-  const params = new URLSearchParams({
-    rank: rank.toString(),
-  });
-
-  const response = await fetch(`${STATS_API_URL}?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch champion stats: ${response.statusText}`);
+export async function fetchStats(): Promise<WinRates> {
+  try {
+    const response = await axios.get(STATS_API_URL);
+    console.log('fetchStats:'); // Debugging line
+    const data = response.data;
+    return data as WinRates;
+  } catch (error) {
+    console.error('Error fetching champion stats:', error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data as WinRates;
 }
