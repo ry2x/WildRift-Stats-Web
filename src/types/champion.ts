@@ -12,7 +12,7 @@ export type RoleKey =
 /**
  * Possible lanes for champions
  */
-export type LaneKey = 'all' | 'mid' | 'jungle' | 'top' | 'support' | 'ad';
+export type LaneKey = 'mid' | 'jungle' | 'top' | 'support' | 'ad';
 
 /**
  * Champion data structure from Champion API

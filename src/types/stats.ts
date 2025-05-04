@@ -50,14 +50,14 @@ export type RankRange = '0' | '1' | '2' | '3' | '4';
 
 /**
  * Lane positions in the game (API format)
- * 0:all 1:mid 2:top 3:adc 4:sup 5:jg
+ * 0:all 1:mid 2:top 3:adc 4:sup
  */
-export type Lane = '1' | '2' | '3' | '4' | '5' | '0';
+export type Lane = '1' | '2' | '3' | '4' | '5';
 
 /**
  * Statistics for each lane position
  */
-export type PositionStats = Partial<Record<Lane, HeroStats[]>>;
+export type PositionStats = Record<Lane, HeroStats[]>;
 
 /**
  * Statistics for each rank range
