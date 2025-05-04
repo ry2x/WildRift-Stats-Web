@@ -1,6 +1,9 @@
 'use client';
 
-import { useSort, SortKey } from '@/contexts/SortContext';
+import { useSort, SortKey, SortOrder } from '@/contexts/SortContext';
+import { ArrowUpIcon } from '@heroicons/react/24/solid';
+import { ChevronUpIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect } from 'react';
 
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: 'name', label: '名前' },
@@ -10,52 +13,91 @@ const sortOptions: { value: SortKey; label: string }[] = [
   { value: 'utility', label: 'ユーティリティ' },
 ];
 
-export function ChampionSort() {
-  const { sortKey, sortOrder, setSortKey, setSortOrder } = useSort();
+interface ChampionSortProps {
+  sortBy: SortKey;
+  onSortChange: (key: SortKey) => void;
+  sortOrder: SortOrder;
+  onOrderChange: (order: SortOrder) => void;
+}
 
-  const getSortLabel = (label: string) => {
-    if (sortOrder === 'asc') {
-      return `${label}順 ↑`;
-    }
-    return `${label}順 ↓`;
+export function ChampionSort({
+  sortBy,
+  onSortChange,
+  sortOrder,
+  onOrderChange,
+}: ChampionSortProps) {
+  const [isOpen, setIsOpen] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsOpen(window.innerWidth >= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const toggleOrder = () => {
+    onOrderChange(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
   return (
-    <div className="flex gap-2 items-center">
-      <select
-        value={sortKey}
-        onChange={e => setSortKey(e.target.value as SortKey)}
-        className="pl-4 pr-10 py-3 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none cursor-pointer transition-all duration-300"
-        aria-label="ソート項目"
-      >
-        {sortOptions.map(option => (
-          <option key={option.value} value={option.value}>
-            {getSortLabel(option.label)}
-          </option>
-        ))}
-      </select>
-
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
       <button
-        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-        className="p-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 transition-all duration-300 group"
-        aria-label={sortOrder === 'asc' ? '降順に切り替え' : '昇順に切り替え'}
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex justify-between items-center text-left"
       >
-        <svg
-          className={`w-5 h-5 transition-transform duration-300 ${
-            sortOrder === 'desc' ? 'transform rotate-180' : ''
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M3 4h13M3 8h9M3 12h5M3 16h13"
-          />
-        </svg>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          並び替え
+          <span className="ml-2 text-sm text-blue-500">
+            ({sortOptions.find(opt => opt.value === sortBy)?.label})
+          </span>
+        </h3>
+        <ChevronUpIcon
+          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200
+            ${isOpen ? '' : 'rotate-180'}`}
+        />
       </button>
+
+      <div
+        className={`mt-4 transition-all duration-200 overflow-hidden
+        ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+      >
+        <div className="flex flex-wrap gap-2">
+          {sortOptions.map(option => (
+            <button
+              key={option.value}
+              onClick={() => {
+                if (sortBy === option.value) {
+                  toggleOrder();
+                } else {
+                  onSortChange(option.value);
+                  onOrderChange('asc');
+                }
+              }}
+              className={`
+                flex items-center gap-2 px-3 py-2 rounded-md 
+                transition-all duration-200 
+                ${
+                  sortBy === option.value
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }
+              `}
+            >
+              <span>{option.label}</span>
+              {sortBy === option.value && (
+                <ArrowUpIcon
+                  className={`
+                    w-4 h-4 transition-transform duration-200
+                    ${sortOrder === 'desc' ? 'rotate-180' : ''}
+                  `}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -12,7 +12,7 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
   return (
     <Link
       href={`/champion/${champion.id}`}
-      className="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105 "
+      className="group relative flex flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-md transition-transform hover:scale-105 "
     >
       {/* Champion Image */}
       <div className="relative aspect-square w-full overflow-hidden">
@@ -27,14 +27,14 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
 
       {/* Champion Info */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 ">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {champion.name}
         </h3>
         <div className="mt-1 flex flex-wrap gap-1">
           {champion.roles.map(role => (
             <span
               key={role}
-              className="inline-block rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 "
+              className="inline-block rounded bg-blue-100 dark:bg-blue-900 px-2 py-1 text-xs font-medium text-blue-800 dark:text-blue-200 "
             >
               {role}
             </span>
@@ -45,22 +45,22 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
         {stats && (
           <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
             <div className="text-center">
-              <p className="font-medium text-green-600 ">
+              <p className="font-medium text-green-600 dark:text-green-400">
                 {formatPercentage(parseFloat(stats.win_rate_percent))}
               </p>
-              <p className="text-xs text-gray-500 ">勝率</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">勝率</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-blue-600 ">
+              <p className="font-medium text-blue-600 dark:text-blue-400">
                 {formatPercentage(parseFloat(stats.appear_rate_percent))}
               </p>
-              <p className="text-xs text-gray-500 ">Pick率</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Pick率</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-red-600 ">
+              <p className="font-medium text-red-600 dark:text-red-400">
                 {formatPercentage(parseFloat(stats.forbid_rate_percent))}
               </p>
-              <p className="text-xs text-gray-500 ">Ban率</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Ban率</p>
             </div>
           </div>
         )}

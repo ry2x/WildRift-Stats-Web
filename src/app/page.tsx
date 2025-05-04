@@ -11,7 +11,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8 text-gray-900 ">
+    <div className="container mx-auto px-4 py-8 text-gray-900 dark:text-gray-100">
       <h1 className="mb-8 text-3xl font-bold">Wild Rift チャンピオン一覧</h1>
       <ChampionGrid />
 
@@ -20,7 +20,7 @@ export default function Home() {
       {/* Loading component test */}
       <div className="mb-8">
         <h3 className="text-xl font-semibold mb-2">Loading Component</h3>
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <Loading message="データを読み込み中です..." />
         </div>
       </div>
@@ -28,7 +28,7 @@ export default function Home() {
       {/* Error component test */}
       <div className="mb-8">
         <h3 className="text-xl font-semibold mb-2">Error Component</h3>
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <ErrorMessage
             message="データの読み込みに失敗しました"
             onRetry={handleRetry}

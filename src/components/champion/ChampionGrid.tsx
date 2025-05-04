@@ -1,66 +1,64 @@
 'use client';
 
-import { useChampions } from '@/contexts/ChampionContext';
 import { ChampionCard } from './ChampionCard';
-import { Loading } from '../ui/Loading';
-import { ErrorMessage } from '../ui/ErrorMessage';
-import { ChampionSearch } from './ChampionSearch';
 import { ChampionFilter } from './ChampionFilter';
 import { ChampionSort } from './ChampionSort';
+import { ChampionSearch } from './ChampionSearch';
+import { useChampions } from '@/contexts/ChampionContext';
+import { useFilters } from '@/contexts/FilterContext';
+import { useSort } from '@/contexts/SortContext';
+import { Loading } from '../ui/Loading';
+import { ErrorMessage } from '../ui/ErrorMessage';
+import { RoleKey, LaneKey } from '@/types';
 
 export function ChampionGrid() {
-  const { loading, error, filteredChampions, refreshChampions } =
-    useChampions();
+  const { champions, loading, error, filteredChampions } = useChampions();
+  const { selectedRoles, selectedLanes, toggleRole, toggleLane } = useFilters();
+  const { sortKey, setSortKey, sortOrder, setSortOrder } = useSort();
 
-  if (loading) return <Loading message="チャンピオンデータを読み込み中..." />;
-  if (error)
-    return (
-      <ErrorMessage
-        message="チャンピオンデータの取得に失敗しました"
-        error={error}
-        onRetry={refreshChampions}
-      />
-    );
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const allRoles: RoleKey[] = [
+    'fighter',
+    'mage',
+    'assassin',
+    'marksman',
+    'support',
+    'tank',
+  ];
+  const allLanes: LaneKey[] = ['mid', 'jungle', 'top', 'support', 'ad'];
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="space-y-6">
-        {/* コントロールパネル */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-            チャンピオンを探す
-          </h2>
-          <div className="space-y-6">
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
-              <div className="flex-1">
-                <ChampionSearch />
-              </div>
-              <div className="flex-shrink-0">
-                <ChampionSort />
-              </div>
-            </div>
-            <ChampionFilter />
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Filters Section */}
+        <div className="space-y-6">
+          <ChampionSearch />
+          <ChampionFilter
+            roles={allRoles}
+            selectedRoles={Array.from(selectedRoles)}
+            onRoleChange={toggleRole}
+            lanes={allLanes}
+            selectedLanes={Array.from(selectedLanes)}
+            onLaneChange={toggleLane}
+          />
+          <ChampionSort
+            sortBy={sortKey}
+            onSortChange={setSortKey}
+            sortOrder={sortOrder}
+            onOrderChange={setSortOrder}
+          />
         </div>
 
-        {/* チャンピオングリッド */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-          {filteredChampions.map(champion => (
-            <ChampionCard key={champion.id} champion={champion} />
-          ))}
-        </div>
-
-        {/* 検索結果なし */}
-        {filteredChampions.length === 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
-            <div className="text-gray-600 dark:text-gray-400 text-lg">
-              検索条件に一致するチャンピオンが見つかりませんでした。
-            </div>
-            <p className="text-gray-500 dark:text-gray-500 mt-2">
-              検索条件やフィルターを変更してみてください。
-            </p>
+        {/* Champions Grid */}
+        <div className="md:col-span-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredChampions.map(champion => (
+              <ChampionCard key={champion.id} champion={champion} />
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

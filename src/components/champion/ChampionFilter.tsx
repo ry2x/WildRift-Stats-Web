@@ -2,6 +2,8 @@
 
 import { useFilters } from '@/contexts/FilterContext';
 import { RoleKey, LaneKey } from '@/types';
+import { ChevronUpIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect } from 'react';
 
 const roleLabels: Record<RoleKey, string> = {
   fighter: 'ファイター',
@@ -20,92 +22,128 @@ const laneLabels: Record<LaneKey, string> = {
   ad: 'ADキャリー',
 };
 
-export function ChampionFilter() {
-  const { selectedRoles, selectedLanes, toggleRole, toggleLane, clearFilters } =
-    useFilters();
+interface ChampionFilterProps {
+  roles: RoleKey[];
+  selectedRoles: RoleKey[];
+  onRoleChange: (role: RoleKey) => void;
+  lanes: LaneKey[];
+  selectedLanes: LaneKey[];
+  onLaneChange: (lane: LaneKey) => void;
+}
+
+export function ChampionFilter({
+  roles,
+  selectedRoles,
+  onRoleChange,
+  lanes,
+  selectedLanes,
+  onLaneChange,
+}: ChampionFilterProps) {
+  const [isRolesOpen, setIsRolesOpen] = useState(window.innerWidth >= 768);
+  const [isLanesOpen, setIsLanesOpen] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 768;
+      setIsRolesOpen(isDesktop);
+      setIsLanesOpen(isDesktop);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <div className="space-y-4">
-      {/* ロールフィルター */}
-      <div>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          ロール
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {(Object.entries(roleLabels) as [RoleKey, string][]).map(
-            ([role, label]) => (
+    <div className="space-y-6">
+      {/* Role Filter */}
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <button
+          onClick={() => setIsRolesOpen(!isRolesOpen)}
+          className="w-full flex justify-between items-center text-left"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            ロールでフィルター
+            {selectedRoles.length > 0 && (
+              <span className="ml-2 text-sm text-blue-500">
+                ({selectedRoles.length}個選択中)
+              </span>
+            )}
+          </h3>
+          <ChevronUpIcon
+            className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200
+              ${isRolesOpen ? '' : 'rotate-180'}`}
+          />
+        </button>
+
+        <div
+          className={`mt-4 transition-all duration-200 overflow-hidden
+          ${isRolesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className="flex flex-wrap gap-2">
+            {roles.map(role => (
               <button
                 key={role}
-                onClick={() => toggleRole(role)}
+                onClick={() => onRoleChange(role)}
                 className={`
-                px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
-                ${
-                  selectedRoles.has(role)
-                    ? 'bg-blue-500 text-white shadow-md transform scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                }
-              `}
-                aria-pressed={selectedRoles.has(role)}
+                  px-3 py-2 rounded-md transition-all duration-200
+                  ${
+                    selectedRoles.includes(role)
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }
+                `}
               >
-                {label}
+                {roleLabels[role]}
               </button>
-            )
-          )}
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* レーンフィルター */}
-      <div>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          レーン
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {(Object.entries(laneLabels) as [LaneKey, string][]).map(
-            ([lane, label]) => (
+      {/* Lane Filter */}
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <button
+          onClick={() => setIsLanesOpen(!isLanesOpen)}
+          className="w-full flex justify-between items-center text-left"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            レーンでフィルター
+            {selectedLanes.length > 0 && (
+              <span className="ml-2 text-sm text-blue-500">
+                ({selectedLanes.length}個選択中)
+              </span>
+            )}
+          </h3>
+          <ChevronUpIcon
+            className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200
+              ${isLanesOpen ? '' : 'rotate-180'}`}
+          />
+        </button>
+
+        <div
+          className={`mt-4 transition-all duration-200 overflow-hidden
+          ${isLanesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className="flex flex-wrap gap-2">
+            {lanes.map(lane => (
               <button
                 key={lane}
-                onClick={() => toggleLane(lane)}
+                onClick={() => onLaneChange(lane)}
                 className={`
-                px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
-                ${
-                  selectedLanes.has(lane)
-                    ? 'bg-blue-500 text-white shadow-md transform scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                }
-              `}
-                aria-pressed={selectedLanes.has(lane)}
+                  px-3 py-2 rounded-md transition-all duration-200
+                  ${
+                    selectedLanes.includes(lane)
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }
+                `}
               >
-                {label}
+                {laneLabels[lane]}
               </button>
-            )
-          )}
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* クリアボタン */}
-      {(selectedRoles.size > 0 || selectedLanes.size > 0) && (
-        <div className="flex justify-end">
-          <button
-            onClick={clearFilters}
-            className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 flex items-center gap-2"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-            フィルターをクリア
-          </button>
-        </div>
-      )}
     </div>
   );
 }
