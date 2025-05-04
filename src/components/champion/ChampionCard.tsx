@@ -12,7 +12,7 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
   return (
     <Link
       href={`/champion/${champion.id}`}
-      className="group relative flex flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-md transition-transform hover:scale-105 "
+      className="group relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 shadow-md hover:shadow-xl transition-all duration-200 hover:scale-105 backdrop-blur-sm border border-white/20 dark:border-blue-900/20"
     >
       {/* Champion Image */}
       <div className="relative aspect-square w-full overflow-hidden">
@@ -27,14 +27,14 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
 
       {/* Champion Info */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-100 dark:to-purple-100 bg-clip-text text-transparent">
           {champion.name}
         </h3>
         <div className="mt-1 flex flex-wrap gap-1">
           {champion.roles.map(role => (
             <span
               key={role}
-              className="inline-block rounded bg-blue-100 dark:bg-blue-900 px-2 py-1 text-xs font-medium text-blue-800 dark:text-blue-200 "
+              className="inline-block rounded bg-gradient-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-800/90 dark:to-purple-800/90 px-2 py-1 text-xs font-medium text-blue-800 dark:text-white backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20"
             >
               {role}
             </span>

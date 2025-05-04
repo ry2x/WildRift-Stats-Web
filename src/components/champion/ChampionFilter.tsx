@@ -56,21 +56,21 @@ export function ChampionFilter({
   return (
     <div className="space-y-6">
       {/* Role Filter */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
         <button
           onClick={() => setIsRolesOpen(!isRolesOpen)}
           className="w-full flex justify-between items-center text-left"
         >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
             ロールでフィルター
             {selectedRoles.length > 0 && (
-              <span className="ml-2 text-sm text-blue-500">
+              <span className="ml-2 text-sm text-blue-400 dark:text-blue-300">
                 ({selectedRoles.length}個選択中)
               </span>
             )}
           </h3>
           <ChevronUpIcon
-            className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200
+            className={`w-5 h-5 text-blue-400 dark:text-blue-300 transition-transform duration-200
               ${isRolesOpen ? '' : 'rotate-180'}`}
           />
         </button>
@@ -88,9 +88,10 @@ export function ChampionFilter({
                   px-3 py-2 rounded-md transition-all duration-200
                   ${
                     selectedRoles.includes(role)
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                      : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
                   }
+                  backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20
                 `}
               >
                 {roleLabels[role]}
@@ -101,21 +102,21 @@ export function ChampionFilter({
       </div>
 
       {/* Lane Filter */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
         <button
           onClick={() => setIsLanesOpen(!isLanesOpen)}
           className="w-full flex justify-between items-center text-left"
         >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
             レーンでフィルター
             {selectedLanes.length > 0 && (
-              <span className="ml-2 text-sm text-blue-500">
+              <span className="ml-2 text-sm text-blue-400 dark:text-blue-300">
                 ({selectedLanes.length}個選択中)
               </span>
             )}
           </h3>
           <ChevronUpIcon
-            className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200
+            className={`w-5 h-5 text-blue-400 dark:text-blue-300 transition-transform duration-200
               ${isLanesOpen ? '' : 'rotate-180'}`}
           />
         </button>
@@ -133,9 +134,10 @@ export function ChampionFilter({
                   px-3 py-2 rounded-md transition-all duration-200
                   ${
                     selectedLanes.includes(lane)
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                      : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
                   }
+                  backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20
                 `}
               >
                 {laneLabels[lane]}

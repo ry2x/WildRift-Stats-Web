@@ -5,7 +5,6 @@ import { ChampionProvider } from '@/contexts/ChampionContext';
 import { StatsProvider } from '@/contexts/StatsContext';
 import { FilterProvider } from '@/contexts/FilterContext';
 import { SortProvider } from '@/contexts/SortContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
 import './globals.css';
 
 const geistSans = Geist({
@@ -33,17 +32,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <FilterProvider>
-            <SortProvider>
-              <ChampionProvider>
-                <StatsProvider>
-                  <MainLayout>{children}</MainLayout>
-                </StatsProvider>
-              </ChampionProvider>
-            </SortProvider>
-          </FilterProvider>
-        </ThemeProvider>
+        <FilterProvider>
+          <SortProvider>
+            <ChampionProvider>
+              <StatsProvider>
+                <MainLayout>{children}</MainLayout>
+              </StatsProvider>
+            </ChampionProvider>
+          </SortProvider>
+        </FilterProvider>
       </body>
     </html>
   );
