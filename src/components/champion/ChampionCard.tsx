@@ -10,7 +10,7 @@ interface ChampionCardProps {
 
 export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
   return (
-    <Link href={`/champion/${champion.id}`} className="champion-card group">
+    <Link href={`/champions/${champion.id}`} className="champion-card group">
       {/* Champion Image with Loading State */}
       <div className="relative aspect-square w-full overflow-hidden bg-gradient-to-br from-blue-100/50 to-purple-100/50 dark:from-blue-900/50 dark:to-purple-900/50">
         <Image
