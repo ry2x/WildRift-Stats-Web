@@ -3,8 +3,26 @@ import { fetchStats } from '@/api/stats';
 import { RankRange } from '@/types';
 
 /**
+ * Calculate seconds until next 10:30 AM
+ * @returns number of seconds until next 10:30 AM
+ */
+function getSecondsUntilNextUpdate(): number {
+  const now = new Date();
+  const target = new Date(now);
+
+  target.setHours(10, 30, 0, 0);
+
+  // If it's already past 10:30 AM, set target to next day
+  if (now > target) {
+    target.setDate(target.getDate() + 1);
+  }
+
+  return Math.floor((target.getTime() - now.getTime()) / 1000);
+}
+
+/**
  * Route handler for win rate stats data by rank
- * Uses Next.js cache for 24 hours
+ * Uses Next.js cache until next 10:30 AM
  */
 export async function GET(
   request: Request,
@@ -21,9 +39,11 @@ export async function GET(
       );
     }
 
+    const maxAge = getSecondsUntilNextUpdate();
+
     return NextResponse.json(data.data[rank], {
       headers: {
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+        'Cache-Control': `public, s-maxage=${maxAge}, stale-while-revalidate=${maxAge}`,
       },
     });
   } catch (error) {

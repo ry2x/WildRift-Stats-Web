@@ -14,7 +14,6 @@ export async function fetchChampions(): Promise<Champions> {
     const data: Champions = response.data;
     // Filter for Wild Rift champions only
     const wildRiftChampions = data.filter(champion => champion.is_wr);
-    console.log('fetchChampions:', wildRiftChampions); // Debugging line
     return wildRiftChampions;
   } catch (error) {
     console.error('Error fetching champion data:', error);

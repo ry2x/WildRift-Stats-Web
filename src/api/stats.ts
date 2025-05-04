@@ -11,7 +11,6 @@ const STATS_API_URL =
 export async function fetchStats(): Promise<WinRates> {
   try {
     const response = await axios.get(STATS_API_URL);
-    console.log('fetchStats:'); // Debugging line
     const data = response.data;
     return data as WinRates;
   } catch (error) {
