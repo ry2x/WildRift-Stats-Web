@@ -1,86 +1,59 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { LaneKey, RoleKey } from '@/types';
-
-interface FilterState {
-  searchTerm: string;
-  selectedRoles: RoleKey[];
-  selectedLanes: LaneKey[];
-  sortBy: 'name' | 'winRate' | 'pickRate' | 'banRate';
-  sortOrder: 'asc' | 'desc';
-}
+import { RoleKey, LaneKey } from '@/types';
 
 interface FilterContextType {
-  filters: FilterState;
-  setSearchTerm: (term: string) => void;
+  selectedRoles: Set<RoleKey>;
+  selectedLanes: Set<LaneKey>;
   toggleRole: (role: RoleKey) => void;
   toggleLane: (lane: LaneKey) => void;
-  setSortBy: (sort: FilterState['sortBy']) => void;
-  toggleSortOrder: () => void;
-  resetFilters: () => void;
+  clearFilters: () => void;
 }
-
-const initialFilters: FilterState = {
-  searchTerm: '',
-  selectedRoles: [],
-  selectedLanes: [],
-  sortBy: 'name',
-  sortOrder: 'asc',
-};
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export function FilterProvider({ children }: { children: ReactNode }) {
-  const [filters, setFilters] = useState<FilterState>(initialFilters);
-
-  const setSearchTerm = (term: string) => {
-    setFilters(prev => ({ ...prev, searchTerm: term }));
-  };
+  const [selectedRoles, setSelectedRoles] = useState<Set<RoleKey>>(new Set());
+  const [selectedLanes, setSelectedLanes] = useState<Set<LaneKey>>(new Set());
 
   const toggleRole = (role: RoleKey) => {
-    setFilters(prev => ({
-      ...prev,
-      selectedRoles: prev.selectedRoles.includes(role)
-        ? prev.selectedRoles.filter(r => r !== role)
-        : [...prev.selectedRoles, role],
-    }));
+    setSelectedRoles(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(role)) {
+        newSet.delete(role);
+      } else {
+        newSet.add(role);
+      }
+      return newSet;
+    });
   };
 
   const toggleLane = (lane: LaneKey) => {
-    setFilters(prev => ({
-      ...prev,
-      selectedLanes: prev.selectedLanes.includes(lane)
-        ? prev.selectedLanes.filter(l => l !== lane)
-        : [...prev.selectedLanes, lane],
-    }));
+    setSelectedLanes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(lane)) {
+        newSet.delete(lane);
+      } else {
+        newSet.add(lane);
+      }
+      return newSet;
+    });
   };
 
-  const setSortBy = (sort: FilterState['sortBy']) => {
-    setFilters(prev => ({ ...prev, sortBy: sort }));
-  };
-
-  const toggleSortOrder = () => {
-    setFilters(prev => ({
-      ...prev,
-      sortOrder: prev.sortOrder === 'asc' ? 'desc' : 'asc',
-    }));
-  };
-
-  const resetFilters = () => {
-    setFilters(initialFilters);
+  const clearFilters = () => {
+    setSelectedRoles(new Set());
+    setSelectedLanes(new Set());
   };
 
   return (
     <FilterContext.Provider
       value={{
-        filters,
-        setSearchTerm,
+        selectedRoles,
+        selectedLanes,
         toggleRole,
         toggleLane,
-        setSortBy,
-        toggleSortOrder,
-        resetFilters,
+        clearFilters,
       }}
     >
       {children}
