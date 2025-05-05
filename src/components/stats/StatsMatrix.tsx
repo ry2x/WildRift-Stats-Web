@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useStats } from '@/contexts/StatsContext';
@@ -8,7 +8,12 @@ import { useChampions } from '@/contexts/ChampionContext';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Loading } from '@/components/ui/Loading';
 import { RankRange, Lane, HeroStats } from '@/types/stats';
-import { ArrowUpIcon } from '@heroicons/react/24/solid';
+import {
+  ArrowUpIcon,
+  ChevronUpIcon,
+  GlobeAltIcon,
+  MapIcon,
+} from '@heroicons/react/24/outline';
 
 // Sort options configuration
 type SortKey = 'win_rate' | 'appear_rate' | 'forbid_rate';
@@ -60,6 +65,20 @@ export function StatsMatrix() {
   const [selectedLane, setSelectedLane] = useState<Lane>('1');
   const [sortKey, setSortKey] = useState<SortKey>('win_rate');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [isRankOpen, setIsRankOpen] = useState(window.innerWidth >= 768);
+  const [isLaneOpen, setIsLaneOpen] = useState(window.innerWidth >= 768);
+
+  // Add window resize handler
+  useEffect(() => {
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 768;
+      setIsRankOpen(isDesktop);
+      setIsLaneOpen(isDesktop);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // チャンピオンIDからチャンピオン情報を取得するためのMap
   const championMap = new Map(
@@ -116,47 +135,92 @@ export function StatsMatrix() {
 
   return (
     <div className="space-y-8">
-      {/* Rank Filter */}
-      <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-6 shadow-xl backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
-          ランク帯
-        </h2>
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {Object.entries(rankDisplayNames).map(([rank, name]) => (
-            <button
-              key={rank}
-              onClick={() => setCurrentRank(rank as RankRange)}
-              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                currentRank === rank
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                  : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
-              } backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20`}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Combined Filter Section */}
+      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-6">
+        {/* Rank Filter */}
+        <div>
+          <button
+            onClick={() => setIsRankOpen(!isRankOpen)}
+            className="w-full flex justify-between items-center text-left"
+          >
+            <div className="flex items-center gap-2">
+              <GlobeAltIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
+                ランク帯の選択
+                <span className="ml-2 text-sm text-blue-400 dark:text-blue-300">
+                  ({rankDisplayNames[currentRank]})
+                </span>
+              </h3>
+            </div>
+            <ChevronUpIcon
+              className={`w-5 h-5 text-blue-400 dark:text-blue-300 transition-transform duration-200
+                ${isRankOpen ? '' : 'rotate-180'}`}
+            />
+          </button>
 
-      {/* Lane Filter */}
-      <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-6 shadow-xl backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
-          レーン
-        </h2>
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {lanes.map(lane => (
-            <button
-              key={lane}
-              onClick={() => setSelectedLane(lane)}
-              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                selectedLane === lane
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                  : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
-              } backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20`}
-            >
-              {laneDisplayNames[lane]}
-            </button>
-          ))}
+          <div
+            className={`mt-4 transition-all duration-200 overflow-hidden
+            ${isRankOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+          >
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(rankDisplayNames).map(([rank, name]) => (
+                <button
+                  key={rank}
+                  onClick={() => setCurrentRank(rank as RankRange)}
+                  className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                    currentRank === rank
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
+                      : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
+                  } backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20`}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Lane Filter */}
+        <div className="border-t border-gray-200/20 dark:border-gray-700/20 pt-6">
+          <button
+            onClick={() => setIsLaneOpen(!isLaneOpen)}
+            className="w-full flex justify-between items-center text-left"
+          >
+            <div className="flex items-center gap-2">
+              <MapIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
+                レーンの選択
+                <span className="ml-2 text-sm text-blue-400 dark:text-blue-300">
+                  ({laneDisplayNames[selectedLane]})
+                </span>
+              </h3>
+            </div>
+            <ChevronUpIcon
+              className={`w-5 h-5 text-blue-400 dark:text-blue-300 transition-transform duration-200
+                ${isLaneOpen ? '' : 'rotate-180'}`}
+            />
+          </button>
+
+          <div
+            className={`mt-4 transition-all duration-200 overflow-hidden
+            ${isLaneOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+          >
+            <div className="flex flex-wrap gap-2">
+              {lanes.map(lane => (
+                <button
+                  key={lane}
+                  onClick={() => setSelectedLane(lane)}
+                  className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                    selectedLane === lane
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
+                      : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
+                  } backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20`}
+                >
+                  {laneDisplayNames[lane]}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
