@@ -1,8 +1,7 @@
 'use client';
 
 import { ChampionCard } from './ChampionCard';
-import { ChampionFilter } from './ChampionFilter';
-import { ChampionSort } from './ChampionSort';
+import { ChampionFilterAndSort } from './ChampionFilterAndSort';
 import { ChampionSearch } from './ChampionSearch';
 import { useChampions } from '@/contexts/ChampionContext';
 import { useFilters } from '@/contexts/FilterContext';
@@ -135,18 +134,16 @@ export function ChampionGrid() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Filters Section */}
+        {/* Filter and Sort Section */}
         <div className="space-y-6">
           <ChampionSearch />
-          <ChampionFilter
+          <ChampionFilterAndSort
             roles={allRoles}
             selectedRoles={Array.from(selectedRoles)}
             onRoleChange={toggleRole}
             lanes={allLanes}
             selectedLanes={Array.from(selectedLanes)}
             onLaneChange={toggleLane}
-          />
-          <ChampionSort
             sortBy={sortKey}
             onSortChange={setSortKey}
             sortOrder={sortOrder}
