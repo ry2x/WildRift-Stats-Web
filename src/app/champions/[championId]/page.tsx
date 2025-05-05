@@ -1,13 +1,8 @@
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
-import {
-  PositionStats,
-  WinRates,
-  Lane,
-  RankRange,
-  HeroStats,
-} from '@/types/stats';
+import { PositionStats, Lane, RankRange, HeroStats } from '@/types/stats';
 import { ChampionDetailPage } from '@/components/champion/ChampionDetail/ChampionDetailPage';
+import { Champion, Champions } from '@/types/champion';
 
 interface ChampionDetailPageProps {
   params: Promise<{
@@ -36,9 +31,9 @@ export default async function Page({ params }: ChampionDetailPageProps) {
     throw new Error('Failed to fetch champion data');
   }
 
-  const champions = await response.json();
+  const champions = (await response.json()) as Champions;
   const champion = champions.find(
-    (c: any) => c.id.toLowerCase() === championId.toLowerCase()
+    (c: Champion) => c.id.toLowerCase() === championId.toLowerCase()
   );
 
   if (!champion) {
@@ -69,9 +64,8 @@ export default async function Page({ params }: ChampionDetailPageProps) {
       const laneData = statsData[lane];
       if (laneData) {
         const champStats = laneData.find(
-          (stat: HeroStats) =>
-            stat.hero_id &&
-            stat.hero_id.toString() === champion.hero_id.toString()
+          stat =>
+            stat.hero_id && String(stat.hero_id) === String(champion.hero_id)
         );
         if (champStats) {
           laneStats[lane] = champStats;

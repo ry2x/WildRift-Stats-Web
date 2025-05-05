@@ -4,7 +4,6 @@ import type {
   HeroStats,
   Lane,
   RankRange,
-  RankStats,
   WinRates,
 } from '@/types';
 

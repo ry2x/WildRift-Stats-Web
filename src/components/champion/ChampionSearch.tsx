@@ -1,7 +1,7 @@
 'use client';
 
 import { useChampions } from '@/contexts/ChampionContext';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
@@ -10,19 +10,27 @@ export function ChampionSearch() {
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
   // デバウンス処理された検索語の更新
-  const debouncedSetSearchTerm = useCallback(
-    debounce((value: string) => {
-      setSearchTerm(value);
-    }, 300),
+  const debouncedSetSearchTerm = useMemo(
+    () => debounce((value: string) => void setSearchTerm(value), 300),
     [setSearchTerm]
   );
 
+  // コンポーネントのアンマウント時にデバウンス処理をキャンセル
+  useEffect(() => {
+    return () => {
+      debouncedSetSearchTerm.cancel();
+    };
+  }, [debouncedSetSearchTerm]);
+
   // 入力値の変更をハンドル
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalSearchTerm(value); // ローカルの状態を即時更新
-    debouncedSetSearchTerm(value); // デバウンスされた更新を実行
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setLocalSearchTerm(value);
+      void debouncedSetSearchTerm(value);
+    },
+    [debouncedSetSearchTerm]
+  );
 
   return (
     <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20">

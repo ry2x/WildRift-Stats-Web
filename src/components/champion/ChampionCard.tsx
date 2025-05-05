@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Champion, HeroStats } from '@/types';
-import { formatPercentage } from '@/utils/format';
 import { roleLabels } from '@/constants/game';
 
 interface ChampionCardProps {
@@ -9,7 +8,7 @@ interface ChampionCardProps {
   stats?: HeroStats;
 }
 
-export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
+export const ChampionCard = ({ champion }: ChampionCardProps) => {
   return (
     <Link href={`/champions/${champion.id}`} className="champion-card group">
       {/* Champion Image with Loading State */}

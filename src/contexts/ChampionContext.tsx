@@ -18,7 +18,7 @@ import { withErrorHandling } from '@/utils/errorHandling';
 interface ChampionContextType {
   champions: Champions;
   loading: boolean;
-  error: unknown | null;
+  error: Error | null; // unknown型を具体的な型に変更
   refreshChampions: () => Promise<void>;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -26,14 +26,12 @@ interface ChampionContextType {
   retryFetch: () => Promise<void>;
 }
 
-const ChampionContext = createContext<ChampionContextType | undefined>(
-  undefined
-);
+const ChampionContext = createContext<ChampionContextType | null>(null);
 
 export function ChampionProvider({ children }: { children: ReactNode }) {
   const [champions, setChampions] = useState<Champions>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const { selectedRoles, selectedLanes } = useFilters();
   const { sortChampions } = useSort();
@@ -101,35 +99,47 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
   const fetchChampions = useCallback(async (forceRefresh = false) => {
     return withErrorHandling(
       async () => {
-        const response = await fetch('/api/champions', {
-          cache: forceRefresh ? 'no-store' : 'force-cache',
-          next: forceRefresh
-            ? undefined
-            : {
-                revalidate: getSecondsUntilNextUpdate(),
-                tags: ['champions'],
-              },
-          headers: forceRefresh
-            ? {
-                'Cache-Control': 'no-cache',
-              }
-            : undefined,
-        });
+        try {
+          const response = await fetch('/api/champions', {
+            cache: forceRefresh ? 'no-store' : 'force-cache',
+            next: forceRefresh
+              ? undefined
+              : {
+                  revalidate: getSecondsUntilNextUpdate(),
+                  tags: ['champions'],
+                },
+            headers: forceRefresh
+              ? {
+                  'Cache-Control': 'no-cache',
+                }
+              : undefined,
+          });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch champions');
+          if (!response.ok) {
+            throw new Error('Failed to fetch champions');
+          }
+
+          const data = (await response.json()) as Champions;
+          setChampions(data);
+          setError(null);
+        } catch (err) {
+          if (err instanceof Error) {
+            setError(err);
+          } else {
+            setError(new Error('An unknown error occurred'));
+          }
         }
-
-        const data = await response.json();
-        setChampions(data);
-        setError(null);
       },
       {
         retry: true,
         maxRetries: 3,
         onError: err => {
           console.error('Error fetching champions:', err);
-          setError(err);
+          if (err instanceof Error) {
+            setError(err);
+          } else {
+            setError(new Error('An unknown error occurred'));
+          }
         },
       }
     );
@@ -158,7 +168,7 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
 
   // Initial fetch
   useEffect(() => {
-    fetchChampions().finally(() => setLoading(false));
+    void fetchChampions().finally(() => setLoading(false));
   }, [fetchChampions]);
 
   // Memoize context value
@@ -208,7 +218,7 @@ function getSecondsUntilNextUpdate(): number {
 
 export function useChampions() {
   const context = useContext(ChampionContext);
-  if (context === undefined) {
+  if (context === null) {
     throw new Error('useChampions must be used within a ChampionProvider');
   }
   return context;

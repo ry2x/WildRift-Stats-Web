@@ -41,7 +41,8 @@ export function ErrorMessage({ message, error, onRetry }: ErrorMessageProps) {
           </p>
           {canRetry && (
             <button
-              onClick={handleRetry}
+              type="button"
+              onClick={() => void handleRetry()}
               disabled={isRetrying}
               className="mt-2 text-sm font-medium text-red-700 dark:text-red-200 hover:text-red-600 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >

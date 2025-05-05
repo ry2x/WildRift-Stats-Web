@@ -46,7 +46,7 @@ function isDataFresh(): boolean {
  * Validates champion data structure
  * @throws {ValidationError} If data structure is invalid
  */
-function validateChampionData(data: unknown): asserts data is Champions {
+function validateChampionData(data: Champions): asserts data is Champions {
   if (!Array.isArray(data)) {
     throw new ValidationError('チャンピオンデータが配列ではありません');
   }
@@ -84,7 +84,7 @@ export async function fetchChampions(forceRefresh = false): Promise<Champions> {
   return withErrorHandling(
     async () => {
       try {
-        const response = await axios.get(CHAMPION_API_URL, {
+        const response = await axios.get<Champions>(CHAMPION_API_URL, {
           headers: {
             'Cache-Control': 'no-cache',
             Pragma: 'no-cache',
@@ -96,7 +96,7 @@ export async function fetchChampions(forceRefresh = false): Promise<Champions> {
 
         // Filter and process data
         const wildRiftChampions = response.data.filter(
-          (champion: Champion) => champion.is_wr
+          (champion): champion is Champion => Boolean(champion.is_wr)
         );
 
         // Update cache
@@ -126,13 +126,13 @@ export async function fetchChampions(forceRefresh = false): Promise<Champions> {
         }
 
         // Handle other errors
-        throw new Error(`予期せぬエラーが発生しました: ${error}`);
+        throw new Error(`予期せぬエラーが発生しました: ${String(error)}`);
       }
     },
     {
       retry: true,
       maxRetries: 3,
-      onError: error => {
+      onError: (error): Champions | undefined => {
         console.error('Error fetching champion data:', error);
 
         // Return cached data as fallback if available
@@ -140,6 +140,7 @@ export async function fetchChampions(forceRefresh = false): Promise<Champions> {
           console.warn('Using cached champion data as fallback');
           return championsCache.data;
         }
+        return undefined;
       },
     }
   );

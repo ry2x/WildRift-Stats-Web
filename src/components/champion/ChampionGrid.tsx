@@ -9,12 +9,11 @@ import { useSort } from '@/contexts/SortContext';
 import { Loading } from '../ui/Loading';
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { RoleKey, LaneKey } from '@/types';
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export function ChampionGrid() {
-  const { champions, loading, error, filteredChampions, retryFetch } =
-    useChampions();
+  const { loading, error, filteredChampions, retryFetch } = useChampions();
   const { selectedRoles, selectedLanes, toggleRole, toggleLane } = useFilters();
   const { sortKey, setSortKey, sortOrder, setSortOrder, sortChampions } =
     useSort();
@@ -30,9 +29,8 @@ export function ChampionGrid() {
     () => ({
       roles: Array.from(selectedRoles).sort().join(','),
       lanes: Array.from(selectedLanes).sort().join(','),
-      sort: `${sortKey}-${sortOrder}`,
     }),
-    [selectedRoles, selectedLanes, sortKey, sortOrder]
+    [selectedRoles, selectedLanes]
   );
 
   // メモ化されたページネーション値
@@ -57,29 +55,12 @@ export function ChampionGrid() {
       ),
       totalChampions: sortedChampions.length,
     };
-  }, [
-    filteredChampions,
-    sortKey,
-    sortOrder,
-    currentPageFromUrl,
-    itemsPerPage,
-    sortChampions,
-  ]);
-
-  // フィルター変更時のみページをリセット（初期化時は除外）
-  const prevFilterState = useRef(filterState);
-  useEffect(() => {
-    if (prevFilterState.current !== filterState) {
-      updateQueryParams(1);
-    }
-    prevFilterState.current = filterState;
-  }, [filterState]);
+  }, [filteredChampions, currentPageFromUrl, itemsPerPage, sortChampions]);
 
   // URLクエリパラメーター更新
   const updateQueryParams = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
-      // 常にページパラメータを設定（1ページ目でも消さない）
       params.set('page', page.toString());
       const query = params.toString();
       const url = query ? `?${query}` : '';
@@ -87,6 +68,15 @@ export function ChampionGrid() {
     },
     [router, searchParams]
   );
+
+  // フィルター変更時のみページをリセット（初期化時は除外）
+  const prevFilterState = useRef(filterState);
+  useEffect(() => {
+    if (prevFilterState.current !== filterState) {
+      void updateQueryParams(1);
+    }
+    prevFilterState.current = filterState;
+  }, [filterState, updateQueryParams]);
 
   // ページ変更のハンドラー
   const handlePageChange = useCallback(

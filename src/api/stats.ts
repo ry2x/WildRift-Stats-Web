@@ -124,7 +124,7 @@ export async function fetchStats(forceRefresh = false): Promise<WinRates> {
             );
           }
           throw new ApiError(
-            `統計データの取得に失敗しました: ${error.message}`,
+            `統計データの取得に失敗しました: ${String(error.message)}`,
             error.response.status
           );
         }
@@ -135,7 +135,7 @@ export async function fetchStats(forceRefresh = false): Promise<WinRates> {
         }
 
         // Handle other errors
-        throw new Error(`予期せぬエラーが発生しました: ${error}`);
+        throw new Error(`予期せぬエラーが発生しました: ${String(error)}`);
       }
     },
     {

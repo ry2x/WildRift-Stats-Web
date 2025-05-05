@@ -16,13 +16,13 @@ interface StatsContextType {
   stats: WinRates | null;
   currentRank: RankRange;
   loading: boolean;
-  error: unknown | null;
+  error: Error | null;
   setCurrentRank: (rank: RankRange) => void;
   refreshStats: () => Promise<void>;
   retryFetch: () => Promise<void>;
 }
 
-const StatsContext = createContext<StatsContextType | undefined>(undefined);
+const StatsContext = createContext<StatsContextType | null>(null);
 
 /**
  * Calculate seconds until next 10:00 AM
@@ -43,11 +43,11 @@ export function StatsProvider({ children }: { children: ReactNode }) {
   const [stats, setStats] = useState<WinRates | null>(null);
   const [currentRank, setCurrentRank] = useState<RankRange>('0');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   // Memoize fetch function with error handling
   const fetchStats = useCallback(
-    async (rank: RankRange, forceRefresh = false) => {
+    async (rank: RankRange = '0', forceRefresh = false) => {
       return withErrorHandling(
         async () => {
           const response = await fetch(`/api/stats/${rank}`, {
@@ -69,7 +69,7 @@ export function StatsProvider({ children }: { children: ReactNode }) {
             throw new Error('Failed to fetch stats');
           }
 
-          const rankData = await response.json();
+          const rankData = (await response.json()) as PositionStats;
 
           // Create proper WinRates structure with all required ranks
           const emptyPositionStats: PositionStats = {
@@ -100,9 +100,13 @@ export function StatsProvider({ children }: { children: ReactNode }) {
         {
           retry: true,
           maxRetries: 3,
-          onError: err => {
+          onError: (err: unknown) => {
             console.error('Error fetching stats:', err);
-            setError(err);
+            if (err instanceof Error) {
+              setError(err);
+            } else {
+              setError(new Error('An unknown error occurred'));
+            }
           },
         }
       );
@@ -133,8 +137,8 @@ export function StatsProvider({ children }: { children: ReactNode }) {
 
   // Effect for initial fetch and rank changes
   useEffect(() => {
-    fetchStats(currentRank).finally(() => setLoading(false));
-  }, [currentRank, fetchStats]);
+    void fetchStats(currentRank).finally(() => setLoading(false));
+  }, [fetchStats, currentRank]);
 
   // Memoize context value
   const contextValue = useMemo(
@@ -159,7 +163,7 @@ export function StatsProvider({ children }: { children: ReactNode }) {
 
 export function useStats() {
   const context = useContext(StatsContext);
-  if (context === undefined) {
+  if (context === null) {
     throw new Error('useStats must be used within a StatsProvider');
   }
   return context;

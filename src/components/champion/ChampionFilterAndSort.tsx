@@ -1,6 +1,5 @@
 'use client';
 
-import { useFilters } from '@/contexts/FilterContext';
 import { RoleKey, LaneKey } from '@/types';
 import { SortKey, SortOrder } from '@/contexts/SortContext';
 import {
