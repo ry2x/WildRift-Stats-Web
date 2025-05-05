@@ -9,7 +9,7 @@ import {
   useMemo,
   useCallback,
 } from 'react';
-import { RankRange, WinRates } from '@/types';
+import { RankRange, WinRates, PositionStats } from '@/types';
 import { withErrorHandling } from '@/utils/errorHandling';
 
 interface StatsContextType {
@@ -69,10 +69,33 @@ export function StatsProvider({ children }: { children: ReactNode }) {
             throw new Error('Failed to fetch stats');
           }
 
-          const data = await response.json();
-          setStats(data);
+          const rankData = await response.json();
+
+          // Create proper WinRates structure with all required ranks
+          const emptyPositionStats: PositionStats = {
+            '1': [],
+            '2': [],
+            '3': [],
+            '4': [],
+            '5': [],
+          };
+
+          const newStats: WinRates = {
+            result: 0,
+            data: {
+              '0': emptyPositionStats,
+              '1': emptyPositionStats,
+              '2': emptyPositionStats,
+              '3': emptyPositionStats,
+              '4': emptyPositionStats,
+              ...stats?.data,
+              [rank]: rankData,
+            },
+          };
+
+          setStats(newStats);
           setError(null);
-          return data;
+          return newStats;
         },
         {
           retry: true,
@@ -84,7 +107,7 @@ export function StatsProvider({ children }: { children: ReactNode }) {
         }
       );
     },
-    []
+    [stats]
   );
 
   // Memoize refresh function
