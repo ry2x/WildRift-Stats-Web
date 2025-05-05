@@ -80,11 +80,8 @@ export function ChampionGrid() {
   const updateQueryParams = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (page === 1) {
-        params.delete('page'); // ページ1の場合はパラメーターを削除してURLをクリーンに
-      } else {
-        params.set('page', page.toString());
-      }
+      // 常にページパラメータを設定（1ページ目でも消さない）
+      params.set('page', page.toString());
       const query = params.toString();
       const url = query ? `?${query}` : '';
       router.push(url, { scroll: false });
