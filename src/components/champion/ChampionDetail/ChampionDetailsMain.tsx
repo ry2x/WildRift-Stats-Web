@@ -1,8 +1,25 @@
 import { Champion } from '@/types/champion';
 import { HeroStats, Lane, RankRange } from '@/types/stats';
-import Image from 'next/image';
-import { ChampionBasicInfo } from './ChampionBasicInfo';
-import { ChampionStats } from './ChampionStats';
+import dynamic from 'next/dynamic';
+import { Loading } from '@/components/ui/Loading';
+import { ChampionImage } from './ChampionImage';
+
+// Dynamic imports for sub-components
+const ChampionBasicInfo = dynamic(
+  () => import('./ChampionBasicInfo').then(mod => mod.ChampionBasicInfo),
+  {
+    loading: () => <Loading message="基本情報を読み込み中..." />,
+    ssr: true,
+  }
+);
+
+const ChampionStats = dynamic(
+  () => import('./ChampionStats').then(mod => mod.ChampionStats),
+  {
+    loading: () => <Loading message="統計情報を読み込み中..." />,
+    ssr: true,
+  }
+);
 
 interface ChampionDetailsMainProps {
   champion: Champion;
@@ -16,6 +33,7 @@ export function ChampionDetailsMain({
   //const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg`;
   const splashUrl = `https:/game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/${champion.id}_0.jpg`;
   const loadingUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`;
+  const fallbackUrl = `https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${champion.id}.png`;
 
   return (
     <div className="relative w-full">
@@ -23,27 +41,25 @@ export function ChampionDetailsMain({
       <div className="relative h-[70vh] w-full overflow-hidden">
         {/* Landscape splash art */}
         <div className="hidden landscape:block h-full w-full">
-          <Image
+          <ChampionImage
             src={splashUrl}
             alt={`${champion.name} splash art`}
-            fill
             className="object-top object-cover transform scale-105 transition-transform duration-1000 hover:scale-110"
             priority
-            sizes="100vw"
-            quality={90}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            fallbackSrc={fallbackUrl}
           />
         </div>
 
         {/* Portrait loading art */}
         <div className="block landscape:hidden h-full w-full">
-          <Image
+          <ChampionImage
             src={loadingUrl}
             alt={`${champion.name} portrait art`}
-            fill
             className="object-top object-cover transform scale-105 transition-transform duration-1000 hover:scale-110"
             priority
-            sizes="100vw"
-            quality={90}
+            sizes="(max-width: 480px) 100vw, (max-width: 768px) 75vw, 50vw"
+            fallbackSrc={fallbackUrl}
           />
         </div>
 
