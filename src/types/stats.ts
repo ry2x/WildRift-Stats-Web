@@ -7,7 +7,7 @@ export type HeroStats = {
   /** Position/lane of the hero */
   position: string;
   /** Hero ID for API calls */
-  hero_id: number;
+  hero_id: string; // number -> string
   /** Strength rating */
   strength: string;
   /** Weight rating */
