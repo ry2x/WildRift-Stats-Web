@@ -5,123 +5,111 @@ interface ChampionBasicInfoProps {
 }
 
 export function ChampionBasicInfo({ champion }: ChampionBasicInfoProps) {
+  // Helper function to get gradient class based on level
+  const getGradientClass = (currentIndex: number, value: number) => {
+    if (currentIndex >= Math.ceil(value))
+      return 'bg-slate-200 dark:bg-slate-700';
+
+    // Different colors for each level
+    if (currentIndex === 0)
+      return 'bg-gradient-to-r from-emerald-400 to-green-300';
+    if (currentIndex === 1)
+      return 'bg-gradient-to-r from-yellow-400 to-amber-300';
+    return 'bg-gradient-to-r from-orange-400 to-orange-300';
+  };
+
   return (
-    <div className="mt-6 grid gap-6 md:grid-cols-2">
-      {/* Description */}
-      <div className="text-slate-200">
-        <h2 className="text-xl font-semibold text-white">Description</h2>
-        <p className="mt-2 leading-relaxed">{champion.describe}</p>
+    <div className="grid gap-6 md:grid-cols-2">
+      {/* Description Card */}
+      <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+        <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
+          Description
+        </h2>
+        <p className="mt-4 leading-relaxed text-slate-700 dark:text-slate-300">
+          {champion.describe}
+        </p>
       </div>
 
-      {/* Stats and Info */}
+      {/* Stats and Info Card */}
       <div className="space-y-4">
         {/* Champion Stats */}
-        <div className="space-y-3 p-4 rounded-lg bg-slate-800/50">
-          {/* Difficulty */}
-          <div>
-            <h3 className="text-sm font-medium text-slate-300">難易度</h3>
-            <div className="mt-1 flex gap-1">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 w-8 rounded ${
-                    i < Math.ceil(champion.difficult)
-                      ? 'bg-purple-500'
-                      : 'bg-slate-700'
-                  }`}
-                />
-              ))}
+        <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+          <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent mb-4">
+            Champion Stats
+          </h2>
+
+          <div className="space-y-4">
+            {/* Difficulty */}
+            <div className="group">
+              <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                難易度
+              </h3>
+              <div className="flex gap-1">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2.5 w-8 rounded ${getGradientClass(i, champion.difficult)} transition-all duration-300`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Damage */}
-          <div>
-            <h3 className="text-sm font-medium text-slate-300">ダメージ</h3>
-            <div className="mt-1 flex gap-1">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 w-8 rounded ${
-                    i < Math.ceil(champion.damage)
-                      ? 'bg-red-500'
-                      : 'bg-slate-700'
-                  }`}
-                />
-              ))}
+            {/* Damage */}
+            <div className="group">
+              <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                ダメージ
+              </h3>
+              <div className="flex gap-1">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2.5 w-8 rounded ${getGradientClass(i, champion.damage)} transition-all duration-300`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Survivability */}
-          <div>
-            <h3 className="text-sm font-medium text-slate-300">生存性</h3>
-            <div className="mt-1 flex gap-1">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 w-8 rounded ${
-                    i < Math.ceil(champion.survive)
-                      ? 'bg-green-500'
-                      : 'bg-slate-700'
-                  }`}
-                />
-              ))}
+            {/* Survivability */}
+            <div className="group">
+              <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                生存性
+              </h3>
+              <div className="flex gap-1">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2.5 w-8 rounded ${getGradientClass(i, champion.survive)} transition-all duration-300`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Utility */}
-          <div>
-            <h3 className="text-sm font-medium text-slate-300">
-              ユーティリティ
-            </h3>
-            <div className="mt-1 flex gap-1">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 w-8 rounded ${
-                    i < Math.ceil(champion.utility)
-                      ? 'bg-blue-500'
-                      : 'bg-slate-700'
-                  }`}
-                />
-              ))}
+            {/* Utility */}
+            <div className="group">
+              <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                ユーティリティ
+              </h3>
+              <div className="flex gap-1">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2.5 w-8 rounded ${getGradientClass(i, champion.utility)} transition-all duration-300`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Roles */}
-        <div>
-          <h3 className="text-lg font-medium text-white">Roles</h3>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {champion.roles.map(role => (
-              <span
-                key={role}
-                className="rounded bg-slate-700 px-3 py-1 text-sm text-white"
-              >
-                {role}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Lanes */}
-        <div>
-          <h3 className="text-lg font-medium text-white">Lanes</h3>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {champion.lanes.map(lane => (
-              <span
-                key={lane}
-                className="rounded bg-slate-700 px-3 py-1 text-sm text-white"
-              >
-                {lane}
-              </span>
-            ))}
           </div>
         </div>
 
         {/* Free Champion Status */}
         {champion.is_free && (
-          <div className="rounded bg-blue-500/20 p-2 text-blue-300">
-            ⭐ Free Champion This Week
+          <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⭐</span>
+              <span className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent font-medium">
+                Free Champion This Week
+              </span>
+            </div>
           </div>
         )}
       </div>
