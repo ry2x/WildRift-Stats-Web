@@ -6,6 +6,8 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
+  useCallback,
 } from 'react';
 import { Champion, Champions } from '@/types';
 import { toKatakana } from '@/utils/convertHiragana';
@@ -34,13 +36,19 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
   const { selectedRoles, selectedLanes } = useFilters();
   const { sortChampions } = useSort();
 
-  // Filter champions based on search term and filters, then sort
-  const filteredChampions = sortChampions(
-    champions.filter(champion => {
-      // Search filter
-      const matchesSearch = champion.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+  // Memoize search term conversion
+  const normalizedSearchTerm = useMemo(
+    () => toKatakana(searchTerm.toLowerCase()),
+    [searchTerm]
+  );
+
+  // Memoize filtered champions
+  const filteredChampions = useMemo(() => {
+    const filtered = champions.filter(champion => {
+      // Search filter with memoized term
+      const matchesSearch =
+        champion.name.toLowerCase().includes(normalizedSearchTerm) ||
+        toKatakana(champion.name.toLowerCase()).includes(normalizedSearchTerm);
 
       // Role filter (AND search)
       const matchesRole =
@@ -53,16 +61,31 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
         Array.from(selectedLanes).every(lane => champion.lanes.includes(lane));
 
       return matchesSearch && matchesRole && matchesLane;
-    })
-  );
+    });
 
-  const fetchChampions = async () => {
+    // Sort filtered results
+    return sortChampions(filtered);
+  }, [
+    champions,
+    normalizedSearchTerm,
+    selectedRoles,
+    selectedLanes,
+    sortChampions,
+  ]);
+
+  // Optimized fetch with caching
+  const fetchChampions = useCallback(async () => {
     try {
       const response = await fetch('/api/champions', {
-        cache: 'force-cache', // Use cache first
-        next: { revalidate: 86400 }, // Revalidate after 24 hours
+        cache: 'force-cache',
+        next: {
+          revalidate: getSecondsUntilNextUpdate(),
+          tags: ['champions'],
+        },
       });
+
       if (!response.ok) throw new Error('Failed to fetch champions');
+
       const data = await response.json();
       setChampions(data);
       setError(null);
@@ -71,43 +94,67 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const refreshChampions = async () => {
-    try {
-      const response = await fetch('/api/champions', {
-        cache: 'no-store', // Skip cache for refresh
-      });
-      if (!response.ok) throw new Error('Failed to fetch champions');
-      const data = await response.json();
-      setChampions(data);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Unknown error'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchChampions();
   }, []);
 
+  // Optimized refresh with proper cache invalidation
+  const refreshChampions = useCallback(async () => {
+    try {
+      const response = await fetch('/api/champions', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch champions');
+
+      const data = await response.json();
+      setChampions(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error'));
+    }
+  }, []);
+
+  // Initial fetch
+  useEffect(() => {
+    fetchChampions();
+  }, [fetchChampions]);
+
+  // Memoize context value
+  const contextValue = useMemo(
+    () => ({
+      champions,
+      loading,
+      error,
+      refreshChampions,
+      searchTerm,
+      setSearchTerm,
+      filteredChampions,
+    }),
+    [champions, loading, error, refreshChampions, searchTerm, filteredChampions]
+  );
+
   return (
-    <ChampionContext.Provider
-      value={{
-        champions,
-        loading,
-        error,
-        refreshChampions,
-        searchTerm,
-        setSearchTerm,
-        filteredChampions,
-      }}
-    >
+    <ChampionContext.Provider value={contextValue}>
       {children}
     </ChampionContext.Provider>
   );
+}
+
+/**
+ * Helper function to get seconds until next update time
+ */
+function getSecondsUntilNextUpdate(): number {
+  const now = new Date();
+  const target = new Date(now);
+  target.setHours(10, 30, 0, 0);
+
+  if (now > target) {
+    target.setDate(target.getDate() + 1);
+  }
+
+  return Math.floor((target.getTime() - now.getTime()) / 1000);
 }
 
 export function useChampions() {
