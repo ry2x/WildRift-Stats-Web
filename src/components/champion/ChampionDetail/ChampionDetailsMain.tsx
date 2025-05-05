@@ -37,8 +37,7 @@ export function ChampionDetailsMain({
   stats,
 }: ChampionDetailsMainProps) {
   const { error: statsError, retryFetch: retryStats } = useStats();
-  //const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg`;
-  const splashUrl = `https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/${champion.id}_0.jpg`;
+  const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg`;
   const loadingUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`;
   const fallbackUrl = `https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${champion.id}.png`;
 
