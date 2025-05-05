@@ -1,5 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { WinRates } from '../types/stats';
+import {
+  ApiError,
+  NetworkError,
+  ValidationError,
+  withErrorHandling,
+} from '../utils/errorHandling';
 
 const STATS_API_URL =
   'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2';
@@ -38,58 +44,112 @@ function isDataFresh(): boolean {
 
 /**
  * Validate stats data structure
+ * @throws {ValidationError} If data structure is invalid
  */
-function isValidStatsData(data: any): data is WinRates {
-  return (
-    typeof data === 'object' &&
-    data !== null &&
-    typeof data.result === 'number' &&
-    typeof data.data === 'object' &&
-    data.data !== null &&
-    Object.values(data.data).every(
-      rankData =>
-        typeof rankData === 'object' &&
-        rankData !== null &&
-        Object.values(rankData).every(Array.isArray)
-    )
-  );
+function validateStatsData(data: unknown): asserts data is WinRates {
+  if (
+    typeof data !== 'object' ||
+    data === null ||
+    typeof (data as WinRates).result !== 'number' ||
+    typeof (data as WinRates).data !== 'object' ||
+    (data as WinRates).data === null
+  ) {
+    throw new ValidationError('不正な統計データ形式です');
+  }
+
+  // Validate rank data structure
+  const statsData = (data as WinRates).data;
+  for (const rankData of Object.values(statsData)) {
+    if (typeof rankData !== 'object' || rankData === null) {
+      throw new ValidationError('不正なランクデータ形式です');
+    }
+
+    // Validate lane data structure
+    for (const laneData of Object.values(rankData)) {
+      if (!Array.isArray(laneData)) {
+        throw new ValidationError('不正なレーンデータ形式です');
+      }
+
+      // Validate hero stats
+      for (const heroStat of laneData) {
+        if (
+          typeof heroStat !== 'object' ||
+          heroStat === null ||
+          typeof heroStat.hero_id !== 'string' || // number -> string
+          typeof heroStat.win_rate_percent !== 'string' ||
+          typeof heroStat.appear_rate_percent !== 'string' ||
+          typeof heroStat.forbid_rate_percent !== 'string'
+        ) {
+          throw new ValidationError('不正なヒーロー統計データ形式です');
+        }
+      }
+    }
+  }
 }
 
 /**
  * Fetches champion stats data from the API
  * Data is updated daily at 10:00 AM
- * @param forceRefresh - Whether to force a cache refresh
- * @returns Promise containing win rate data
+ * @throws {ApiError} If API returns an error
+ * @throws {NetworkError} If network error occurs
+ * @throws {ValidationError} If data validation fails
  */
 export async function fetchStats(forceRefresh = false): Promise<WinRates> {
-  try {
-    // Return cached data if it's fresh and not forcing refresh
-    if (!forceRefresh && statsCache.data && isDataFresh()) {
-      return statsCache.data;
-    }
-
-    // Fetch new data
-    const response = await axios.get(STATS_API_URL);
-
-    // Validate data structure
-    if (!isValidStatsData(response.data)) {
-      throw new Error('Invalid stats data structure');
-    }
-
-    // Update cache
-    statsCache = {
-      data: response.data,
-      timestamp: Date.now(),
-    };
-
-    return response.data;
-  } catch (error) {
-    // If we have cached data and encounter an error, return cached data
-    if (statsCache.data) {
-      console.warn('Error fetching stats data, using cached data:', error);
-      return statsCache.data;
-    }
-    console.error('Error fetching stats data:', error);
-    throw error;
+  // Return cached data if it's fresh and not forcing refresh
+  if (!forceRefresh && statsCache.data && isDataFresh()) {
+    return statsCache.data;
   }
+
+  return withErrorHandling(
+    async () => {
+      try {
+        const response = await axios.get(STATS_API_URL);
+
+        // Validate data structure
+        validateStatsData(response.data);
+
+        // Update cache
+        statsCache = {
+          data: response.data,
+          timestamp: Date.now(),
+        };
+
+        return response.data;
+      } catch (error) {
+        // Handle axios errors
+        if (error instanceof AxiosError) {
+          if (!error.response) {
+            throw new NetworkError(
+              '統計データの取得中にネットワークエラーが発生しました'
+            );
+          }
+          throw new ApiError(
+            `統計データの取得に失敗しました: ${error.message}`,
+            error.response.status
+          );
+        }
+
+        // Re-throw validation errors
+        if (error instanceof ValidationError) {
+          throw error;
+        }
+
+        // Handle other errors
+        throw new Error(`予期せぬエラーが発生しました: ${error}`);
+      }
+    },
+    {
+      retry: true,
+      maxRetries: 3,
+      onError: error => {
+        console.error('Error fetching stats data:', error);
+
+        // Return cached data as fallback if available
+        if (statsCache.data) {
+          console.warn('Using cached stats data as fallback');
+          return statsCache.data;
+        }
+      },
+    }
+  );
 }

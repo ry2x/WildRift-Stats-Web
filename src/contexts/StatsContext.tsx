@@ -10,14 +10,16 @@ import {
   useCallback,
 } from 'react';
 import { RankRange, WinRates } from '@/types';
+import { withErrorHandling } from '@/utils/errorHandling';
 
 interface StatsContextType {
   stats: WinRates | null;
   currentRank: RankRange;
   loading: boolean;
-  error: Error | null;
+  error: unknown | null;
   setCurrentRank: (rank: RankRange) => void;
   refreshStats: () => Promise<void>;
+  retryFetch: () => Promise<void>;
 }
 
 const StatsContext = createContext<StatsContextType | undefined>(undefined);
@@ -41,34 +43,46 @@ export function StatsProvider({ children }: { children: ReactNode }) {
   const [stats, setStats] = useState<WinRates | null>(null);
   const [currentRank, setCurrentRank] = useState<RankRange>('0');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
 
-  // Memoize fetch function
+  // Memoize fetch function with error handling
   const fetchStats = useCallback(
     async (rank: RankRange, forceRefresh = false) => {
-      try {
-        const response = await fetch(`/api/stats/${rank}`, {
-          cache: forceRefresh ? 'no-store' : 'force-cache',
-          next: forceRefresh
-            ? undefined
-            : {
-                revalidate: getSecondsUntilNextUpdate(),
-                tags: ['stats', `stats-${rank}`],
-              },
-          headers: forceRefresh
-            ? {
-                'Cache-Control': 'no-cache',
-              }
-            : undefined,
-        });
+      return withErrorHandling(
+        async () => {
+          const response = await fetch(`/api/stats/${rank}`, {
+            cache: forceRefresh ? 'no-store' : 'force-cache',
+            next: forceRefresh
+              ? undefined
+              : {
+                  revalidate: getSecondsUntilNextUpdate(),
+                  tags: ['stats', `stats-${rank}`],
+                },
+            headers: forceRefresh
+              ? {
+                  'Cache-Control': 'no-cache',
+                }
+              : undefined,
+          });
 
-        if (!response.ok) throw new Error('Failed to fetch stats');
+          if (!response.ok) {
+            throw new Error('Failed to fetch stats');
+          }
 
-        const data = await response.json();
-        return data;
-      } catch (err) {
-        throw err instanceof Error ? err : new Error('Unknown error');
-      }
+          const data = await response.json();
+          setStats(data);
+          setError(null);
+          return data;
+        },
+        {
+          retry: true,
+          maxRetries: 3,
+          onError: err => {
+            console.error('Error fetching stats:', err);
+            setError(err);
+          },
+        }
+      );
     },
     []
   );
@@ -77,11 +91,18 @@ export function StatsProvider({ children }: { children: ReactNode }) {
   const refreshStats = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await fetchStats(currentRank, true);
-      setStats(data);
+      await fetchStats(currentRank, true);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentRank, fetchStats]);
+
+  // Retry fetch function
+  const retryFetch = useCallback(async () => {
+    try {
+      setLoading(true);
       setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Unknown error'));
+      await fetchStats(currentRank);
     } finally {
       setLoading(false);
     }
@@ -89,20 +110,7 @@ export function StatsProvider({ children }: { children: ReactNode }) {
 
   // Effect for initial fetch and rank changes
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchStats(currentRank);
-        setStats(data);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadStats();
+    fetchStats(currentRank).finally(() => setLoading(false));
   }, [currentRank, fetchStats]);
 
   // Memoize context value
@@ -114,8 +122,9 @@ export function StatsProvider({ children }: { children: ReactNode }) {
       error,
       setCurrentRank,
       refreshStats,
+      retryFetch,
     }),
-    [stats, currentRank, loading, error, refreshStats]
+    [stats, currentRank, loading, error, refreshStats, retryFetch]
   );
 
   return (
