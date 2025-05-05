@@ -14,6 +14,7 @@ import {
   GlobeAltIcon,
   MapIcon,
 } from '@heroicons/react/24/outline';
+import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
 
 // Sort options configuration
 type SortKey = 'win_rate' | 'appear_rate' | 'forbid_rate';
@@ -24,22 +25,6 @@ const sortOptions: { key: SortKey; label: string }[] = [
   { key: 'appear_rate', label: 'ピック率' },
   { key: 'forbid_rate', label: 'バン率' },
 ];
-
-const rankDisplayNames: Record<RankRange, string> = {
-  '0': '全ランク',
-  '1': 'ダイヤモンド以上',
-  '2': 'マスター以上',
-  '3': 'チャレンジャー以上',
-  '4': 'スーパーサーバー',
-};
-
-const laneDisplayNames: Record<Lane, string> = {
-  '1': 'ミッド',
-  '2': 'トップ',
-  '3': 'ADC',
-  '4': 'サポート',
-  '5': 'ジャングル',
-};
 
 // Color utility functions
 function getWinRateColor(winRate: number): string {
@@ -146,7 +131,7 @@ export function StatsMatrix() {
             <div className="flex items-center gap-2">
               <GlobeAltIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
               <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
-                ランク帯の選択
+                ランクの選択
                 <span className="ml-2 text-sm text-blue-400 dark:text-blue-300">
                   ({rankDisplayNames[currentRank]})
                 </span>

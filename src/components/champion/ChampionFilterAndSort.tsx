@@ -11,31 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import { useState, useEffect } from 'react';
-
-const roleLabels: Record<RoleKey, string> = {
-  fighter: 'ファイター',
-  mage: 'メイジ',
-  assassin: 'アサシン',
-  marksman: 'マークスマン',
-  support: 'サポート',
-  tank: 'タンク',
-};
-
-const laneLabels: Record<LaneKey, string> = {
-  mid: 'ミッド',
-  jungle: 'ジャングル',
-  top: 'トップ',
-  support: 'サポート',
-  ad: 'ADキャリー',
-};
-
-const sortOptions: { value: SortKey; label: string }[] = [
-  { value: 'name', label: '名前' },
-  { value: 'difficult', label: '難易度' },
-  { value: 'damage', label: 'ダメージ' },
-  { value: 'survive', label: '生存性' },
-  { value: 'utility', label: 'ユーティリティ' },
-];
+import { laneLabels, roleLabels, sortOptions } from '@/constants/game';
 
 interface ChampionFilterAndSortProps {
   roles: RoleKey[];

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Champion, HeroStats } from '@/types';
 import { formatPercentage } from '@/utils/format';
+import { roleLabels } from '@/constants/game';
 
 interface ChampionCardProps {
   champion: Champion;
@@ -36,7 +37,7 @@ export const ChampionCard = ({ champion, stats }: ChampionCardProps) => {
               key={role}
               className="inline-block rounded bg-gradient-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-800/90 dark:to-purple-800/90 px-2 py-1 text-xs font-medium text-blue-800 dark:text-blue-100 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20"
             >
-              {role}
+              {roleLabels[role]}
             </span>
           ))}
         </div>

@@ -2,28 +2,11 @@
 
 import { useState, memo } from 'react';
 import { HeroStats, RankRange, Lane } from '@/types/stats';
+import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
 
 interface ChampionStatsProps {
   stats: Record<RankRange, Record<Lane, HeroStats>>;
 }
-
-// Map API rank values to display names
-const rankDisplayNames: Record<RankRange, string> = {
-  '0': '全ランク',
-  '1': 'ダイヤモンド以上',
-  '2': 'マスター以上',
-  '3': 'チャレンジャー以上',
-  '4': 'スーパーサーバー',
-};
-
-// Map API lane values to display names
-const laneDisplayNames: Record<Lane, string> = {
-  '1': 'ミッド',
-  '2': 'トップ',
-  '3': 'ADC',
-  '4': 'サポート',
-  '5': 'ジャングル',
-};
 
 // Memoized component with performance improvements
 export const ChampionStats = memo(function ChampionStats({
