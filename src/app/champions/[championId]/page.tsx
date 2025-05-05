@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
-import { ChampionDetailsMain } from '@/components/champion/ChampionDetail/ChampionDetailsMain';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { Loading } from '@/components/ui/Loading';
 import {
   PositionStats,
   WinRates,
@@ -16,6 +18,18 @@ interface ChampionDetailPageProps {
 }
 
 type RankedStats = Record<RankRange, Record<Lane, HeroStats>>;
+
+// Dynamic import with loading
+const ChampionDetailsMain = dynamic(
+  () =>
+    import('@/components/champion/ChampionDetail/ChampionDetailsMain').then(
+      mod => mod.ChampionDetailsMain
+    ),
+  {
+    loading: () => <Loading message="チャンピオン情報を読み込み中..." />,
+    ssr: true,
+  }
+);
 
 export default async function ChampionDetailPage({
   params,
@@ -86,7 +100,11 @@ export default async function ChampionDetailPage({
 
   return (
     <main className="flex min-h-screen flex-col">
-      <ChampionDetailsMain champion={champion} stats={rankStats} />
+      <Suspense
+        fallback={<Loading message="チャンピオン情報を読み込み中..." />}
+      >
+        <ChampionDetailsMain champion={champion} stats={rankStats} />
+      </Suspense>
     </main>
   );
 }
