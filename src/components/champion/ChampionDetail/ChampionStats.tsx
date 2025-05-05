@@ -34,7 +34,7 @@ export const ChampionStats = memo(function ChampionStats({
   if (!stats || Object.keys(stats).length === 0) {
     return (
       <div className="mt-8">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
+        <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
           統計情報
         </h2>
         <p className="mt-4 text-slate-700 dark:text-slate-300">
@@ -53,21 +53,23 @@ export const ChampionStats = memo(function ChampionStats({
         統計情報
       </h2>
 
-      {/* Rank Filter with enhanced styling */}
-      <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-        {(Object.keys(rankDisplayNames) as RankRange[]).map(rank => (
-          <button
-            key={rank}
-            onClick={() => setSelectedRank(rank)}
-            className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
-              selectedRank === rank
-                ? 'bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg shadow-blue-500/20'
-                : 'bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-slate-700/90 text-slate-700 dark:text-slate-300 hover:from-blue-50 hover:to-blue-100 dark:hover:from-slate-700/90 dark:hover:to-slate-600/90 hover:text-blue-600 dark:hover:text-white border border-slate-200/50 dark:border-white/10'
-            }`}
-          >
-            {rankDisplayNames[rank]}
-          </button>
-        ))}
+      {/* Rank Filter Card */}
+      <div className="mt-4 rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-4 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 shadow-lg shadow-blue-500/5">
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {(Object.keys(rankDisplayNames) as RankRange[]).map(rank => (
+            <button
+              key={rank}
+              onClick={() => setSelectedRank(rank)}
+              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                selectedRank === rank
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg shadow-blue-500/20'
+                  : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-600 hover:text-blue-600 dark:hover:text-white border border-slate-200/50 dark:border-white/10'
+              }`}
+            >
+              {rankDisplayNames[rank]}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Stats Grid */}
