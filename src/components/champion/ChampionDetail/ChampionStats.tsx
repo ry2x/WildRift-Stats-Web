@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { HeroStats, RankRange, Lane } from '@/types/stats';
 
 interface ChampionStatsProps {
@@ -25,7 +25,10 @@ const laneDisplayNames: Record<Lane, string> = {
   '5': 'ジャングル',
 };
 
-export function ChampionStats({ stats }: ChampionStatsProps) {
+// Memoized component with performance improvements
+export const ChampionStats = memo(function ChampionStats({
+  stats,
+}: ChampionStatsProps) {
   const [selectedRank, setSelectedRank] = useState<RankRange>('0');
 
   if (!stats || Object.keys(stats).length === 0) {
@@ -145,7 +148,7 @@ export function ChampionStats({ stats }: ChampionStatsProps) {
       </div>
     </div>
   );
-}
+});
 
 // 勝率に基づいて色を返す関数
 function getWinRateColor(winRate: number): string {

@@ -1,10 +1,14 @@
+import { memo } from 'react';
 import { Champion } from '@/types/champion';
 
 interface ChampionBasicInfoProps {
   champion: Champion;
 }
 
-export function ChampionBasicInfo({ champion }: ChampionBasicInfoProps) {
+// Memoized component with performance improvements
+export const ChampionBasicInfo = memo(function ChampionBasicInfo({
+  champion,
+}: ChampionBasicInfoProps) {
   // Helper function to get gradient class based on level
   const getGradientClass = (currentIndex: number, value: number) => {
     if (currentIndex >= Math.ceil(value))
@@ -115,4 +119,4 @@ export function ChampionBasicInfo({ champion }: ChampionBasicInfoProps) {
       </div>
     </div>
   );
-}
+});
