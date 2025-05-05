@@ -1,5 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Champion, Champions } from '../types/champion';
+import {
+  ApiError,
+  NetworkError,
+  ValidationError,
+  withErrorHandling,
+} from '../utils/errorHandling';
 
 const CHAMPION_API_URL =
   'https://ry2x.github.io/WildRift-Merged-Champion-Data/data_ja_JP.json';
@@ -38,68 +44,103 @@ function isDataFresh(): boolean {
 
 /**
  * Validates champion data structure
- * @param data - Data to validate
- * @returns true if data is valid
+ * @throws {ValidationError} If data structure is invalid
  */
-function isValidChampionData(data: any): data is Champions {
-  return (
-    Array.isArray(data) &&
-    data.every(
-      champion =>
-        typeof champion === 'object' &&
-        champion !== null &&
-        typeof champion.id === 'string' &&
-        typeof champion.hero_id === 'number' &&
-        typeof champion.name === 'string' &&
-        Array.isArray(champion.roles) &&
-        Array.isArray(champion.lanes)
-    )
-  );
+function validateChampionData(data: unknown): asserts data is Champions {
+  if (!Array.isArray(data)) {
+    throw new ValidationError('チャンピオンデータが配列ではありません');
+  }
+
+  for (const champion of data) {
+    if (
+      typeof champion !== 'object' ||
+      champion === null ||
+      typeof champion.id !== 'string' ||
+      typeof champion.hero_id !== 'number' ||
+      typeof champion.name !== 'string' ||
+      !Array.isArray(champion.roles) ||
+      !Array.isArray(champion.lanes)
+    ) {
+      throw new ValidationError(
+        `不正なチャンピオンデータ: ${JSON.stringify(champion)}`
+      );
+    }
+  }
 }
 
 /**
  * Fetches champion data from the API and filters for Wild Rift champions only
  * Data is updated daily at 10:00 AM
- * @param forceRefresh - Whether to force a cache refresh
- * @returns Promise containing Wild Rift champion data
+ * @throws {ApiError} If API returns an error
+ * @throws {NetworkError} If network error occurs
+ * @throws {ValidationError} If data validation fails
  */
 export async function fetchChampions(forceRefresh = false): Promise<Champions> {
-  try {
-    // Return cached data if it's fresh and not forcing refresh
-    if (!forceRefresh && championsCache.data && isDataFresh()) {
-      return championsCache.data;
-    }
-
-    // Fetch new data
-    const response = await axios.get(CHAMPION_API_URL, {
-      headers: {
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-      },
-    });
-
-    // Validate data structure
-    if (!isValidChampionData(response.data)) {
-      throw new Error('Invalid champion data structure');
-    }
-
-    // Filter and process data
-    const wildRiftChampions = response.data.filter(champion => champion.is_wr);
-
-    // Update cache
-    championsCache = {
-      data: wildRiftChampions,
-      timestamp: Date.now(),
-    };
-
-    return wildRiftChampions;
-  } catch (error) {
-    // If we have cached data and encounter an error, return cached data
-    if (championsCache.data) {
-      console.warn('Error fetching champion data, using cached data:', error);
-      return championsCache.data;
-    }
-    console.error('Error fetching champion data:', error);
-    throw error;
+  // Return cached data if it's fresh and not forcing refresh
+  if (!forceRefresh && championsCache.data && isDataFresh()) {
+    return championsCache.data;
   }
+
+  return withErrorHandling(
+    async () => {
+      try {
+        const response = await axios.get(CHAMPION_API_URL, {
+          headers: {
+            'Cache-Control': 'no-cache',
+            Pragma: 'no-cache',
+          },
+        });
+
+        // Validate data structure
+        validateChampionData(response.data);
+
+        // Filter and process data
+        const wildRiftChampions = response.data.filter(
+          (champion: Champion) => champion.is_wr
+        );
+
+        // Update cache
+        championsCache = {
+          data: wildRiftChampions,
+          timestamp: Date.now(),
+        };
+
+        return wildRiftChampions;
+      } catch (error) {
+        // Handle axios errors
+        if (error instanceof AxiosError) {
+          if (!error.response) {
+            throw new NetworkError(
+              'チャンピオンデータの取得中にネットワークエラーが発生しました'
+            );
+          }
+          throw new ApiError(
+            `チャンピオンデータの取得に失敗しました: ${error.message}`,
+            error.response.status
+          );
+        }
+
+        // Re-throw validation errors
+        if (error instanceof ValidationError) {
+          throw error;
+        }
+
+        // Handle other errors
+        throw new Error(`予期せぬエラーが発生しました: ${error}`);
+      }
+    },
+    {
+      retry: true,
+      maxRetries: 3,
+      onError: error => {
+        console.error('Error fetching champion data:', error);
+
+        // Return cached data as fallback if available
+        if (championsCache.data) {
+          console.warn('Using cached champion data as fallback');
+          return championsCache.data;
+        }
+      },
+    }
+  );
 }
