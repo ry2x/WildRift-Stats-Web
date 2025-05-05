@@ -1,40 +1,51 @@
 'use client';
 
+import { useCallback, useState } from 'react';
+import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { getErrorMessage, isRetryableError } from '@/utils/errorHandling';
+
 interface ErrorMessageProps {
-  /** Error message to display */
-  message: string;
-  /** Optional retry handler */
-  onRetry?: () => void;
-  /** Optional error object */
-  error?: Error | null;
+  message?: string;
+  error?: unknown;
+  onRetry?: () => Promise<void>;
 }
 
-export function ErrorMessage({ message, onRetry, error }: ErrorMessageProps) {
+export function ErrorMessage({ message, error, onRetry }: ErrorMessageProps) {
+  const [isRetrying, setIsRetrying] = useState(false);
+  const displayMessage = message || getErrorMessage(error);
+  const canRetry = onRetry && (error ? isRetryableError(error) : true);
+
+  const handleRetry = useCallback(async () => {
+    if (!onRetry) return;
+
+    try {
+      setIsRetrying(true);
+      await onRetry();
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [onRetry]);
+
   return (
-    <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4 my-4">
-      <div className="flex">
+    <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4">
+      <div className="flex items-start">
         <div className="flex-shrink-0">
-          {/* Error icon */}
-          <svg
-            className="h-5 w-5 text-red-400 dark:text-red-300"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <ExclamationCircleIcon
+            className="h-5 w-5 text-red-400 dark:text-red-500"
+            aria-hidden="true"
+          />
         </div>
         <div className="ml-3">
-          <p className="text-sm text-red-700 dark:text-red-200">{message}</p>
-          {onRetry && (
+          <p className="text-sm text-red-700 dark:text-red-200">
+            {displayMessage}
+          </p>
+          {canRetry && (
             <button
-              onClick={onRetry}
-              className="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 font-medium"
+              onClick={handleRetry}
+              disabled={isRetrying}
+              className="mt-2 text-sm font-medium text-red-700 dark:text-red-200 hover:text-red-600 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              再試行
+              {isRetrying ? 'リトライ中...' : 'もう一度試す'}
             </button>
           )}
         </div>

@@ -80,7 +80,7 @@ export function ChampionSort({
                 transition-all duration-200 
                 ${
                   sortBy === option.value
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
                     : 'bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
                 }
                 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20

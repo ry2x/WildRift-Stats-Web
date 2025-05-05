@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { Loading } from '@/components/ui/Loading';
+import { headers } from 'next/headers';
 import {
   PositionStats,
   WinRates,
@@ -9,7 +7,7 @@ import {
   RankRange,
   HeroStats,
 } from '@/types/stats';
-import { headers } from 'next/headers';
+import { ChampionDetailPage } from '@/components/champion/ChampionDetail/ChampionDetailPage';
 
 interface ChampionDetailPageProps {
   params: Promise<{
@@ -19,21 +17,7 @@ interface ChampionDetailPageProps {
 
 type RankedStats = Record<RankRange, Record<Lane, HeroStats>>;
 
-// Dynamic import with loading
-const ChampionDetailsMain = dynamic(
-  () =>
-    import('@/components/champion/ChampionDetail/ChampionDetailsMain').then(
-      mod => mod.ChampionDetailsMain
-    ),
-  {
-    loading: () => <Loading message="チャンピオン情報を読み込み中..." />,
-    ssr: true,
-  }
-);
-
-export default async function ChampionDetailPage({
-  params,
-}: ChampionDetailPageProps) {
+export default async function Page({ params }: ChampionDetailPageProps) {
   const { championId } = await params;
   const headersList = await headers();
   const host = headersList.get('host') || '';
@@ -98,13 +82,5 @@ export default async function ChampionDetailPage({
     rankStats[rank] = laneStats;
   });
 
-  return (
-    <main className="flex min-h-screen flex-col">
-      <Suspense
-        fallback={<Loading message="チャンピオン情報を読み込み中..." />}
-      >
-        <ChampionDetailsMain champion={champion} stats={rankStats} />
-      </Suspense>
-    </main>
-  );
+  return <ChampionDetailPage champion={champion} rankStats={rankStats} />;
 }

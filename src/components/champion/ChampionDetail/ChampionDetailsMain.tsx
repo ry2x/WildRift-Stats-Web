@@ -1,8 +1,13 @@
+'use client';
+
 import { Champion } from '@/types/champion';
 import { HeroStats, Lane, RankRange } from '@/types/stats';
 import dynamic from 'next/dynamic';
 import { Loading } from '@/components/ui/Loading';
+import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { ChampionImage } from './ChampionImage';
+import { useStats } from '@/contexts/StatsContext';
+import { Suspense } from 'react';
 
 // Dynamic imports for sub-components
 const ChampionBasicInfo = dynamic(
@@ -30,8 +35,9 @@ export function ChampionDetailsMain({
   champion,
   stats,
 }: ChampionDetailsMainProps) {
+  const { error: statsError, retryFetch: retryStats } = useStats();
   //const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg`;
-  const splashUrl = `https:/game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/${champion.id}_0.jpg`;
+  const splashUrl = `https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/${champion.id}_0.jpg`;
   const loadingUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`;
   const fallbackUrl = `https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${champion.id}.png`;
 
@@ -66,18 +72,18 @@ export function ChampionDetailsMain({
         {/* Multi-layered gradient overlay */}
         <div className="absolute inset-0">
           {/* Base gradient layer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/5 dark:via-slate-900/5 to-slate-900/70 dark:to-slate-900/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/5 dark:via-gray-900/10 to-slate-900/70 dark:to-gray-900/80" />
 
           {/* Middle transition layer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/10 dark:via-slate-900/10 to-slate-100/60 dark:to-slate-900/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/10 dark:via-gray-900/30 to-slate-100/60 dark:to-gray-900/70" />
 
           {/* Bottom area layer */}
-          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-gradient-to-t from-white/80 dark:from-slate-900/80 to-transparent" />
+          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-gradient-to-t from-white/80 dark:from-gray-900/90 to-transparent" />
         </div>
 
         {/* Text protection layer with backdrop */}
         <div className="absolute bottom-0 h-48 inset-x-0">
-          <div className="absolute inset-0 bg-gradient-to-t from-white/60 dark:from-black/60 via-white/30 dark:via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white/60 dark:from-gray-900/80 via-white/30 dark:via-gray-900/50 to-transparent" />
         </div>
 
         {/* Champion info section with enhanced layout */}
@@ -127,17 +133,25 @@ export function ChampionDetailsMain({
       </div>
 
       {/* Content Section with adjusted position */}
-      <div className="relative bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-900">
+      <div className="relative bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 -mt-10">
         {/* Adjusted top gradient */}
-        <div className="absolute inset-x-0 -top-40 h-40 bg-gradient-to-b from-transparent via-slate-50/95 dark:via-slate-900/95 to-slate-50 dark:to-slate-900" />
+        <div className="absolute inset-x-0 -top-40 h-40 bg-gradient-to-b from-transparent via-white/95 dark:via-gray-900/95 to-white dark:to-gray-900" />
 
         {/* Content wrapper with minimal top padding */}
         <div className="relative max-w-7xl mx-auto px-4 pt-0 pb-6 space-y-12">
-          {/* Stats */}
-          <ChampionStats stats={stats} />
+          {/* Stats Section with Error Handling */}
+          <Suspense fallback={<Loading message="統計情報を読み込み中..." />}>
+            {statsError ? (
+              <ErrorMessage error={statsError} onRetry={retryStats} />
+            ) : (
+              <ChampionStats stats={stats} />
+            )}
+          </Suspense>
 
-          {/* Basic Info */}
-          <ChampionBasicInfo champion={champion} />
+          {/* Basic Info Section */}
+          <Suspense fallback={<Loading message="基本情報を読み込み中..." />}>
+            <ChampionBasicInfo champion={champion} />
+          </Suspense>
         </div>
       </div>
     </div>
