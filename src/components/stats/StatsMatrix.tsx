@@ -50,16 +50,19 @@ export function StatsMatrix() {
   const [selectedLane, setSelectedLane] = useState<Lane>('1');
   const [sortKey, setSortKey] = useState<SortKey>('win_rate');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [isRankOpen, setIsRankOpen] = useState(window.innerWidth >= 768);
-  const [isLaneOpen, setIsLaneOpen] = useState(window.innerWidth >= 768);
+  const [isRankOpen, setIsRankOpen] = useState(true);
+  const [isLaneOpen, setIsLaneOpen] = useState(true);
 
-  // Add window resize handler
+  // Initialize states based on window size and handle resize
   useEffect(() => {
     const handleResize = () => {
       const isDesktop = window.innerWidth >= 768;
       setIsRankOpen(isDesktop);
       setIsLaneOpen(isDesktop);
     };
+
+    // Set initial state
+    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
