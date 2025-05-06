@@ -25,7 +25,7 @@ export default async function Page({ params }: ChampionDetailPageProps) {
   const { championId } = await params;
   const headersList = await headers();
   const host = headersList.get('host') || '';
-  // プロトコルの判定をより安全に
+  // More secure protocol decisions
   const protocol =
     host.startsWith('localhost') || host.includes('127.0.0.1')
       ? 'http'
