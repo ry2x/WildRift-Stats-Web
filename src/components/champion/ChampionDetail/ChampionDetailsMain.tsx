@@ -1,7 +1,6 @@
 'use client';
 
-import { Champion } from '@/types/champion';
-import { HeroStats, Lane, RankRange } from '@/types/stats';
+import { HeroStats, Lane, RankRange, Champion } from '@/types';
 import dynamic from 'next/dynamic';
 import { Loading } from '@/components/ui/Loading';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
