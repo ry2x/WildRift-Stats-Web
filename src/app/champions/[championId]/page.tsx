@@ -39,7 +39,7 @@ export default async function Page({ params }: ChampionDetailPageProps) {
   try {
     const response = await fetch(`${protocol}://${host}/api/champions`, {
       cache: 'force-cache',
-      next: { revalidate: 3600 }, // 1時間ごとに再検証
+      next: { revalidate: 3600 }, // Hourly revalidation
     });
 
     if (!response.ok) {
@@ -76,7 +76,7 @@ export default async function Page({ params }: ChampionDetailPageProps) {
         const rankData = statsData.data[rank];
         const laneStats = {} as Record<Lane, HeroStats>;
 
-        // レーンごとのデータを収集
+        // Collect data for each lane
         for (const lane of lanes) {
           const laneData = rankData[lane];
           if (laneData) {

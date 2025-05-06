@@ -9,20 +9,20 @@ export function ChampionSearch() {
   const { searchTerm, setSearchTerm } = useChampions();
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
-  // デバウンス処理された検索語の更新
+  // Update debounced search terms
   const debouncedSetSearchTerm = useMemo(
     () => debounce((value: string) => void setSearchTerm(value), 300),
     [setSearchTerm]
   );
 
-  // コンポーネントのアンマウント時にデバウンス処理をキャンセル
+  // Update debounced search terms
   useEffect(() => {
     return () => {
       debouncedSetSearchTerm.cancel();
     };
   }, [debouncedSetSearchTerm]);
 
-  // 入力値の変更をハンドル
+  // Handle input value changes
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;

@@ -8,7 +8,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // hydrationのミスマッチを防ぐためにマウント後にのみレンダリング
+  // Rendering only after mounting to prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -27,7 +27,7 @@ export function Header() {
             </h1>
           </Link>
 
-          {/* PCメニュー */}
+          {/* PC Menu */}
           <nav className="hidden md:flex space-x-8">
             <Link
               href="/champions"
@@ -43,7 +43,7 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* モバイルメニューボタン */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
@@ -56,7 +56,7 @@ export function Header() {
           </button>
         </div>
 
-        {/* モバイルメニュー（展開式） */}
+        {/* Mobile Menu (Expandable) */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'

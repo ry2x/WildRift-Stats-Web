@@ -15,7 +15,7 @@ import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
 import { withErrorHandling } from '@/utils/errorHandling';
 
-interface ChampionContextType {
+export interface ChampionContextType {
   champions: Champions;
   loading: boolean;
   error: Error | null; // unknown型を具体的な型に変更

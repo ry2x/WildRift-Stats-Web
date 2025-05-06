@@ -135,14 +135,14 @@ export const ChampionStats = memo(function ChampionStats({
   );
 });
 
-// 勝率に基づいて色を返す関数
+// Function to return color based on win rate
 function getWinRateColor(winRate: number): string {
   if (winRate >= 52) return 'text-green-600 dark:text-green-400';
   if (winRate <= 48) return 'text-red-600 dark:text-red-400';
   return 'text-yellow-600 dark:text-yellow-400';
 }
 
-// 強さ指数に基づいて色を返す関数
+// Function to return a color based on a strength index
 function getStrengthColor(strength: number): string {
   if (strength >= 80) return 'text-purple-600 dark:text-purple-400';
   if (strength >= 60) return 'text-blue-600 dark:text-blue-400';
