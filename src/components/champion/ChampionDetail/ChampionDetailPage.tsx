@@ -17,7 +17,7 @@ const ChampionDetailsMain = dynamic(
   () => import('./ChampionDetailsMain').then(mod => mod.ChampionDetailsMain),
   {
     loading: () => <Loading message="チャンピオン情報を読み込み中..." />,
-    ssr: false, // Disable SSR for this component
+    ssr: false,
   }
 );
 

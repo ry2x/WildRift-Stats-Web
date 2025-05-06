@@ -20,11 +20,11 @@ export function ChampionGrid() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // URLから現在のページを取得
+  // Get current page from URL
   const currentPageFromUrl = Number(searchParams.get('page')) || 1;
   const itemsPerPage = 12;
 
-  // フィルター状態の変更を追跡
+  // Track changes to filter state
   const filterState = useMemo(
     () => ({
       roles: Array.from(selectedRoles).sort().join(','),
@@ -33,7 +33,7 @@ export function ChampionGrid() {
     [selectedRoles, selectedLanes]
   );
 
-  // メモ化されたページネーション値
+  // Memoized pagination values
   const paginationValues = useMemo(() => {
     const sortedChampions = sortChampions(filteredChampions);
     const totalPages = Math.ceil(sortedChampions.length / itemsPerPage);
@@ -57,7 +57,7 @@ export function ChampionGrid() {
     };
   }, [filteredChampions, currentPageFromUrl, itemsPerPage, sortChampions]);
 
-  // URLクエリパラメーター更新
+  // Update URL query parameters
   const updateQueryParams = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -69,7 +69,7 @@ export function ChampionGrid() {
     [router, searchParams]
   );
 
-  // フィルター変更時のみページをリセット（初期化時は除外）
+  // Reset page only on filter change (exclude on initialization)
   const prevFilterState = useRef(filterState);
   useEffect(() => {
     if (prevFilterState.current !== filterState) {
@@ -78,7 +78,7 @@ export function ChampionGrid() {
     prevFilterState.current = filterState;
   }, [filterState, updateQueryParams]);
 
-  // ページ変更のハンドラー
+  // Page change handler
   const handlePageChange = useCallback(
     (newPage: number) => {
       updateQueryParams(newPage);
@@ -87,7 +87,7 @@ export function ChampionGrid() {
     [updateQueryParams]
   );
 
-  // 現在のページが無効な場合は更新（ただし初期ロード時は除外）
+  // Update if the current page is invalid (exclude on initial load)
   const isInitialMount = useRef(true);
   useEffect(() => {
     if (isInitialMount.current) {

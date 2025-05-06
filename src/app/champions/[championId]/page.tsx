@@ -31,7 +31,7 @@ export default async function Page({ params }: ChampionDetailPageProps) {
   try {
     const response = await fetch(`${protocol}://${host}/api/champions`, {
       cache: 'force-cache',
-      next: { revalidate: 3600 }, // 1時間ごとに再検証
+      next: { revalidate: 3600 }, // Hourly revalidation
     });
 
     if (!response.ok) {
@@ -47,17 +47,17 @@ export default async function Page({ params }: ChampionDetailPageProps) {
       notFound();
     }
 
-    // 各ランク帯のデータを取得
+    // Obtain data for each rank band
     const rankStats = {} as RankedStats;
     const ranks: RankRange[] = ['0', '1', '2', '3', '4'];
     const lanes: Lane[] = ['1', '2', '3', '4', '5'];
 
-    // 各ランク帯のデータを並列で取得（エラーハンドリングを改善）
+    // Acquire data for each rank band in parallel (improved error handling)
     try {
       const statsPromises = ranks.map(rank =>
         fetch(`${protocol}://${host}/api/stats/${rank}`, {
           cache: 'force-cache',
-          next: { revalidate: 3600 }, // 1時間ごとに再検証
+          next: { revalidate: 3600 }, // Hourly revalidation
         }).then(res => {
           if (!res.ok) {
             throw new Error(`Failed to fetch stats for rank ${rank}`);
@@ -68,12 +68,12 @@ export default async function Page({ params }: ChampionDetailPageProps) {
 
       const statsResults = await Promise.all(statsPromises);
 
-      // 各ランク帯のデータを整理
+      // Organize data for each rank band
       ranks.forEach((rank, index) => {
         const statsData = statsResults[index] as PositionStats;
         const laneStats = {} as Record<Lane, HeroStats>;
 
-        // レーンごとのデータを収集
+        // Collect data for each lane
         for (const lane of lanes) {
           const laneData = statsData[lane];
           if (laneData) {

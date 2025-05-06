@@ -68,7 +68,7 @@ export function StatsMatrix() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // チャンピオンIDからチャンピオン情報を取得するためのMap
+  // Map to obtain champion information from champion ID
   const championMap = new Map(
     champions.map(champ => [champ.hero_id.toString(), champ])
   );
