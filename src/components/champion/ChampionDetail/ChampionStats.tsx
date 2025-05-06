@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, memo } from 'react';
-import { HeroStats, RankRange, Lane } from '@/types/stats';
+import { HeroStats, RankRange, Lane } from '@/types';
 import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
 
 interface ChampionStatsProps {

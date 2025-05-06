@@ -3,9 +3,7 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Loading } from '@/components/ui/Loading';
-import { Champion } from '@/types/champion';
-import { HeroStats, Lane, RankRange } from '@/types/stats';
-import { StatsProvider } from '@/contexts/StatsContext';
+import { HeroStats, Lane, RankRange, Champion } from '@/types';
 
 interface ChampionDetailPageProps {
   champion: Champion;

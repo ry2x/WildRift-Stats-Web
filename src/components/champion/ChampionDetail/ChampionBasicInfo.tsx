@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Champion } from '@/types/champion';
+import { Champion } from '@/types';
 
 interface ChampionBasicInfoProps {
   champion: Champion;
