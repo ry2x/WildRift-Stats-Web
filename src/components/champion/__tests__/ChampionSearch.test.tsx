@@ -38,7 +38,7 @@ describe('ChampionSearch', () => {
     jest.clearAllMocks();
   });
 
-  it('The search input field should display correctly', () => {
+  it('renders search input field correctly', () => {
     render(<ChampionSearch />);
 
     expect(screen.getByText('チャンピオン検索')).toBeInTheDocument();
@@ -47,7 +47,7 @@ describe('ChampionSearch', () => {
     ).toBeInTheDocument();
   });
 
-  it('should call setSearchTerm when text is entered', () => {
+  it('calls setSearchTerm when entering search text', () => {
     render(<ChampionSearch />);
 
     const searchInput = screen.getByPlaceholderText('チャンピオン名を入力...');
@@ -58,7 +58,7 @@ describe('ChampionSearch', () => {
     }, 300);
   });
 
-  it('should call setSearchTerm when input value is empty', () => {
+  it('calls setSearchTerm when input is empty', () => {
     render(<ChampionSearch />);
 
     const searchInput = screen.getByPlaceholderText('チャンピオン名を入力...');

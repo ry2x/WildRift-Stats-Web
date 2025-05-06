@@ -7,26 +7,32 @@ jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: any) => {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img 
-      {...props}
-      fill={undefined}
-      sizes={undefined}
-      priority={undefined}
-      loading={undefined}
-      placeholder={undefined}
-      blurDataURL={undefined}
-      src={props.src || ''} 
-      alt={props.alt || ''} 
-    />;
+    return (
+      <img
+        {...props}
+        fill={undefined}
+        sizes={undefined}
+        priority={undefined}
+        loading={undefined}
+        placeholder={undefined}
+        blurDataURL={undefined}
+        src={props.src || ''}
+        alt={props.alt || ''}
+      />
+    );
   },
 }));
 
 // Mock next/link
 jest.mock('next/link', () => ({
   __esModule: true,
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
+  default: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => <a href={href}>{children}</a>,
 }));
 
 describe('ChampionCard', () => {
@@ -48,7 +54,7 @@ describe('ChampionCard', () => {
     hero_id: 103,
   };
 
-  it('should display champion basic information correctly', () => {
+  it('displays basic champion information correctly', () => {
     render(<ChampionCard champion={mockChampion} />);
 
     // Check if champion name is displayed
@@ -63,7 +69,7 @@ describe('ChampionCard', () => {
     expect(championImage.src).toContain('Ahri.png');
   });
 
-  it('should have correct link to champion detail page', () => {
+  it('has correct link to champion detail page', () => {
     render(<ChampionCard champion={mockChampion} />);
 
     const link = screen.getByRole('link');
