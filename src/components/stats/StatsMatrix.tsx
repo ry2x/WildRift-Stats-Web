@@ -7,7 +7,9 @@ import { useStats } from '@/contexts/StatsContext';
 import { useChampions } from '@/contexts/ChampionContext';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Loading } from '@/components/ui/Loading';
-import { RankRange, Lane, HeroStats } from '@/types/stats';
+import { RankRange, Lane, HeroStats, SortKey, SortOrder } from '@/types';
+import { getWinRateColor } from '@/utils/statsStyle';
+import { sortOptions } from '@/constants/stats';
 import {
   ArrowUpIcon,
   ChevronUpIcon,
@@ -15,23 +17,6 @@ import {
   MapIcon,
 } from '@heroicons/react/24/outline';
 import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
-
-// Sort options configuration
-type SortKey = 'win_rate' | 'appear_rate' | 'forbid_rate';
-type SortOrder = 'asc' | 'desc';
-
-const sortOptions: { key: SortKey; label: string }[] = [
-  { key: 'win_rate', label: '勝率' },
-  { key: 'appear_rate', label: 'ピック率' },
-  { key: 'forbid_rate', label: 'バン率' },
-];
-
-// Color utility functions
-function getWinRateColor(winRate: number): string {
-  if (winRate >= 52) return 'text-green-600 dark:text-green-400';
-  if (winRate <= 48) return 'text-red-600 dark:text-red-400';
-  return 'text-yellow-600 dark:text-yellow-400';
-}
 
 export function StatsMatrix() {
   const {
