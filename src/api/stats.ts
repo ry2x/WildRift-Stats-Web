@@ -10,36 +10,40 @@ import {
 const STATS_API_URL =
   'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2';
 
-// Cache for stats data
-let statsCache: {
+// Cache for stats data with better type safety
+interface StatsCache {
   data: WinRates | null;
   timestamp: number;
-} = {
+  nextUpdateTime: number;
+}
+
+let statsCache: StatsCache = {
   data: null,
   timestamp: 0,
+  nextUpdateTime: 0,
 };
 
 /**
- * Check if the current time is after today's update time (10:00 AM)
- * and before tomorrow's update time
+ * Get the next update time (10:00 AM)
  */
-function isDataFresh(): boolean {
+function getNextUpdateTime(): number {
   const now = new Date();
-  const lastUpdate = new Date(statsCache.timestamp);
+  const target = new Date(now);
+  target.setHours(10, 0, 0, 0);
 
-  // Get today's update time (10:00 AM)
-  const todayUpdate = new Date();
-  todayUpdate.setHours(10, 0, 0, 0);
-
-  // If current time is before today's update, data is fresh if it's from yesterday after update
-  if (now < todayUpdate) {
-    const yesterdayUpdate = new Date(todayUpdate);
-    yesterdayUpdate.setDate(yesterdayUpdate.getDate() - 1);
-    return lastUpdate >= yesterdayUpdate;
+  if (now > target) {
+    target.setDate(target.getDate() + 1);
   }
 
-  // If current time is after today's update, data should be from after today's update
-  return lastUpdate >= todayUpdate;
+  return target.getTime();
+}
+
+/**
+ * Check if the current time is before next update time (10:00 AM)
+ */
+function isDataFresh(): boolean {
+  const now = Date.now();
+  return statsCache.data !== null && now < statsCache.nextUpdateTime;
 }
 
 /**
@@ -96,8 +100,8 @@ function validateStatsData(data: unknown): asserts data is WinRates {
  */
 export async function fetchStats(forceRefresh = false): Promise<WinRates> {
   // Return cached data if it's fresh and not forcing refresh
-  if (!forceRefresh && statsCache.data && isDataFresh()) {
-    return statsCache.data;
+  if (!forceRefresh && isDataFresh()) {
+    return statsCache.data!;
   }
 
   return withErrorHandling(
@@ -108,10 +112,11 @@ export async function fetchStats(forceRefresh = false): Promise<WinRates> {
         // Validate data structure
         validateStatsData(response.data);
 
-        // Update cache
+        // Update cache with next update time
         statsCache = {
           data: response.data,
           timestamp: Date.now(),
+          nextUpdateTime: getNextUpdateTime(),
         };
 
         return response.data;
@@ -129,13 +134,13 @@ export async function fetchStats(forceRefresh = false): Promise<WinRates> {
           );
         }
 
-        // Re-throw validation errors
-        if (error instanceof ValidationError) {
-          throw error;
+        // Return cached data as fallback if available and the error is not a validation error
+        if (statsCache.data && !(error instanceof ValidationError)) {
+          console.warn('Using cached stats data as fallback due to error');
+          return statsCache.data;
         }
 
-        // Handle other errors
-        throw new Error(`予期せぬエラーが発生しました: ${String(error)}`);
+        throw error;
       }
     },
     {
@@ -143,12 +148,6 @@ export async function fetchStats(forceRefresh = false): Promise<WinRates> {
       maxRetries: 3,
       onError: error => {
         console.error('Error fetching stats data:', error);
-
-        // Return cached data as fallback if available
-        if (statsCache.data) {
-          console.warn('Using cached stats data as fallback');
-          return statsCache.data;
-        }
       },
     }
   );

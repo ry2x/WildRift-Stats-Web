@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
-import { PositionStats, Lane, RankRange, HeroStats } from '@/types/stats';
+import { Lane, RankRange, HeroStats } from '@/types/stats';
 import { ChampionDetailPage } from '@/components/champion/ChampionDetail/ChampionDetailPage';
 import { Champion, Champions } from '@/types/champion';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
@@ -12,6 +12,14 @@ interface ChampionDetailPageProps {
 }
 
 type RankedStats = Record<RankRange, Record<Lane, HeroStats>>;
+
+interface StatsData {
+  data: {
+    [key in RankRange]: {
+      [key in Lane]?: HeroStats[];
+    };
+  };
+}
 
 export default async function Page({ params }: ChampionDetailPageProps) {
   const { championId } = await params;
@@ -47,38 +55,33 @@ export default async function Page({ params }: ChampionDetailPageProps) {
       notFound();
     }
 
-    // 各ランク帯のデータを取得
-    const rankStats = {} as RankedStats;
-    const ranks: RankRange[] = ['0', '1', '2', '3', '4'];
-    const lanes: Lane[] = ['1', '2', '3', '4', '5'];
-
-    // 各ランク帯のデータを並列で取得（エラーハンドリングを改善）
+    // 各ランク帯のデータを取得（統合APIを使用）
     try {
-      const statsPromises = ranks.map(rank =>
-        fetch(`${protocol}://${host}/api/stats/${rank}`, {
-          cache: 'force-cache',
-          next: { revalidate: 3600 }, // 1時間ごとに再検証
-        }).then(res => {
-          if (!res.ok) {
-            throw new Error(`Failed to fetch stats for rank ${rank}`);
-          }
-          return res.json();
-        })
-      );
+      const response = await fetch(`${protocol}://${host}/api/stats`, {
+        cache: 'force-cache',
+        next: { revalidate: 3600 }, // 1時間ごとに再検証
+      });
 
-      const statsResults = await Promise.all(statsPromises);
+      if (!response.ok) {
+        throw new Error('Failed to fetch stats data');
+      }
+
+      const statsData = (await response.json()) as StatsData;
+      const rankStats = {} as RankedStats;
+      const ranks: RankRange[] = ['0', '1', '2', '3', '4'];
+      const lanes: Lane[] = ['1', '2', '3', '4', '5'];
 
       // 各ランク帯のデータを整理
-      ranks.forEach((rank, index) => {
-        const statsData = statsResults[index] as PositionStats;
+      ranks.forEach(rank => {
+        const rankData = statsData.data[rank];
         const laneStats = {} as Record<Lane, HeroStats>;
 
         // レーンごとのデータを収集
         for (const lane of lanes) {
-          const laneData = statsData[lane];
+          const laneData = rankData[lane];
           if (laneData) {
             const champStats = laneData.find(
-              stat =>
+              (stat: HeroStats) =>
                 stat.hero_id &&
                 String(stat.hero_id) === String(champion.hero_id)
             );

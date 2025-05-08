@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useStats } from '@/contexts/StatsContext';
@@ -42,16 +42,27 @@ export function StatsMatrix() {
     setCurrentRank,
     retryFetch: retryStats,
   } = useStats();
+
   const {
     champions,
     loading: championsLoading,
     error: championsError,
   } = useChampions();
+
   const [selectedLane, setSelectedLane] = useState<Lane>('1');
   const [sortKey, setSortKey] = useState<SortKey>('win_rate');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [isRankOpen, setIsRankOpen] = useState(true);
   const [isLaneOpen, setIsLaneOpen] = useState(true);
+
+  // Simple rank change without refresh
+  const handleRankClick = useCallback(
+    (rank: RankRange) => {
+      if (rank === currentRank) return;
+      setCurrentRank(rank);
+    },
+    [currentRank, setCurrentRank]
+  );
 
   // Initialize states based on window size and handle resize
   useEffect(() => {
@@ -154,7 +165,7 @@ export function StatsMatrix() {
               {Object.entries(rankDisplayNames).map(([rank, name]) => (
                 <button
                   key={rank}
-                  onClick={() => setCurrentRank(rank as RankRange)}
+                  onClick={() => handleRankClick(rank as RankRange)}
                   className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
                     currentRank === rank
                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'

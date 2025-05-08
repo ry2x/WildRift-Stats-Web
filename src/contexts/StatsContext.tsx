@@ -9,8 +9,7 @@ import {
   useMemo,
   useCallback,
 } from 'react';
-import { RankRange, WinRates, PositionStats } from '@/types';
-import { withErrorHandling } from '@/utils/errorHandling';
+import { RankRange, WinRates } from '@/types';
 
 interface StatsContextType {
   stats: WinRates | null;
@@ -22,12 +21,21 @@ interface StatsContextType {
   retryFetch: () => Promise<void>;
 }
 
+interface CachedStats {
+  data: WinRates | null;
+  timestamp: number;
+  expiresAt: number;
+}
+
 const StatsContext = createContext<StatsContextType | null>(null);
 
+// Cache key for localStorage
+const STATS_CACHE_KEY = 'wild-rift-stats-cache';
+
 /**
- * Calculate seconds until next 10:00 AM
+ * Calculate next update time (10:00 AM)
  */
-function getSecondsUntilNextUpdate(): number {
+function getNextUpdateTime(): number {
   const now = new Date();
   const target = new Date(now);
   target.setHours(10, 0, 0, 0);
@@ -36,7 +44,50 @@ function getSecondsUntilNextUpdate(): number {
     target.setDate(target.getDate() + 1);
   }
 
-  return Math.floor((target.getTime() - now.getTime()) / 1000);
+  return target.getTime();
+}
+
+/**
+ * Save stats data to localStorage with expiration
+ */
+function saveStatsToCache(stats: WinRates) {
+  if (typeof window === 'undefined') return;
+
+  const cache: CachedStats = {
+    data: stats,
+    timestamp: Date.now(),
+    expiresAt: getNextUpdateTime(),
+  };
+  try {
+    localStorage.setItem(STATS_CACHE_KEY, JSON.stringify(cache));
+  } catch (error) {
+    console.warn('Failed to save stats to cache:', error);
+  }
+}
+
+/**
+ * Load stats data from localStorage if not expired
+ */
+function loadStatsFromCache(): WinRates | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const cached = localStorage.getItem(STATS_CACHE_KEY);
+    if (!cached) return null;
+
+    const cache = JSON.parse(cached) as CachedStats;
+    const now = Date.now();
+
+    if (now < cache.expiresAt && cache.data) {
+      return cache.data;
+    }
+
+    // Clear expired cache
+    localStorage.removeItem(STATS_CACHE_KEY);
+  } catch (error) {
+    console.warn('Failed to load stats from cache:', error);
+  }
+  return null;
 }
 
 export function StatsProvider({ children }: { children: ReactNode }) {
@@ -45,100 +96,103 @@ export function StatsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Memoize fetch function with error handling
-  const fetchStats = useCallback(
-    async (rank: RankRange = '0', forceRefresh = false) => {
-      return withErrorHandling(
-        async () => {
-          const response = await fetch(`/api/stats/${rank}`, {
-            cache: forceRefresh ? 'no-store' : 'force-cache',
-            next: forceRefresh
-              ? undefined
-              : {
-                  revalidate: getSecondsUntilNextUpdate(),
-                  tags: ['stats', `stats-${rank}`],
-                },
-            headers: forceRefresh
-              ? {
-                  'Cache-Control': 'no-cache',
-                }
-              : undefined,
-          });
+  // Load cache on client-side only
+  useEffect(() => {
+    const cachedStats = loadStatsFromCache();
+    if (cachedStats) {
+      setStats(cachedStats);
+      setLoading(false);
+    }
+  }, []);
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch stats');
+  // Check if we have valid data for all ranks
+  const hasValidDataForAllRanks = useCallback(() => {
+    if (!stats?.data) return false;
+    const allRanks: RankRange[] = ['0', '1', '2', '3', '4'];
+    return allRanks.every(
+      rank => stats.data[rank] && Object.keys(stats.data[rank]).length > 0
+    );
+  }, [stats]);
+
+  // Fetch all ranks data
+  const fetchAllRanksData = useCallback(
+    async (forceRefresh = false) => {
+      try {
+        setLoading(true);
+
+        // Check cache first unless force refresh
+        if (!forceRefresh) {
+          const now = Date.now();
+          const cached = loadStatsFromCache();
+          if (
+            cached &&
+            now < getNextUpdateTime() &&
+            hasValidDataForAllRanks()
+          ) {
+            console.log(
+              'Using cached stats data for all ranks until:',
+              new Date(getNextUpdateTime()).toLocaleString()
+            );
+            setStats(cached);
+            return cached;
           }
-
-          const rankData = (await response.json()) as PositionStats;
-
-          // Create proper WinRates structure with all required ranks
-          const emptyPositionStats: PositionStats = {
-            '1': [],
-            '2': [],
-            '3': [],
-            '4': [],
-            '5': [],
-          };
-
-          const newStats: WinRates = {
-            result: 0,
-            data: {
-              '0': emptyPositionStats,
-              '1': emptyPositionStats,
-              '2': emptyPositionStats,
-              '3': emptyPositionStats,
-              '4': emptyPositionStats,
-              ...stats?.data,
-              [rank]: rankData,
-            },
-          };
-
-          setStats(newStats);
-          setError(null);
-          return newStats;
-        },
-        {
-          retry: true,
-          maxRetries: 3,
-          onError: (err: unknown) => {
-            console.error('Error fetching stats:', err);
-            if (err instanceof Error) {
-              setError(err);
-            } else {
-              setError(new Error('An unknown error occurred'));
-            }
-          },
         }
-      );
+
+        // Fetch all stats in one call using the new unified endpoint
+        const response = await fetch('/api/stats', {
+          headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : undefined,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch stats data');
+        }
+
+        const newStats = (await response.json()) as WinRates;
+
+        // Save to cache and update state
+        saveStatsToCache(newStats);
+        setStats(newStats);
+        setError(null);
+        return newStats;
+      } catch (error) {
+        console.error('Error fetching stats data:', error);
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error('An unknown error occurred'));
+        }
+        throw error;
+      } finally {
+        setLoading(false);
+      }
     },
-    [stats]
+    [hasValidDataForAllRanks]
   );
 
   // Memoize refresh function
   const refreshStats = useCallback(async () => {
-    try {
-      setLoading(true);
-      await fetchStats(currentRank, true);
-    } finally {
-      setLoading(false);
-    }
-  }, [currentRank, fetchStats]);
+    const now = Date.now();
+    const cached = loadStatsFromCache();
+    const shouldForceRefresh = !cached || now >= getNextUpdateTime();
+    await fetchAllRanksData(shouldForceRefresh);
+  }, [fetchAllRanksData]);
 
   // Retry fetch function
   const retryFetch = useCallback(async () => {
     try {
-      setLoading(true);
       setError(null);
-      await fetchStats(currentRank);
-    } finally {
-      setLoading(false);
+      await fetchAllRanksData();
+    } catch {
+      // Error is already handled in fetchAllRanksData
     }
-  }, [currentRank, fetchStats]);
+  }, [fetchAllRanksData]);
 
-  // Effect for initial fetch and rank changes
+  // Effect for initial fetch
   useEffect(() => {
-    void fetchStats(currentRank).finally(() => setLoading(false));
-  }, [fetchStats, currentRank]);
+    if (!hasValidDataForAllRanks()) {
+      void fetchAllRanksData();
+    }
+  }, [fetchAllRanksData, hasValidDataForAllRanks]);
 
   // Memoize context value
   const contextValue = useMemo(
