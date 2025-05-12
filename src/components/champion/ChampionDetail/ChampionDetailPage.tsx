@@ -27,13 +27,11 @@ export function ChampionDetailPage({
 }: ChampionDetailPageProps) {
   return (
     <main className="flex min-h-screen flex-col">
-      <StatsProvider>
-        <Suspense
-          fallback={<Loading message="チャンピオン情報を読み込み中..." />}
-        >
-          <ChampionDetailsMain champion={champion} stats={rankStats} />
-        </Suspense>
-      </StatsProvider>
+      <Suspense
+        fallback={<Loading message="チャンピオン情報を読み込み中..." />}
+      >
+        <ChampionDetailsMain champion={champion} stats={rankStats} />
+      </Suspense>
     </main>
   );
 }
