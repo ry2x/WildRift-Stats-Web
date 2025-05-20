@@ -10,6 +10,8 @@ import { RankRange, Lane, HeroStats, SortKey, SortOrder } from '@/types';
 import { RankFilter } from './RankFilter';
 import { LaneFilter } from './LaneFilter';
 import { StatsTable } from './StatsTable';
+import { CalendarIcon } from '@heroicons/react/24/outline';
+import { formatYYYYMMDDtoISO } from '@/utils/format';
 
 export function StatsMatrix() {
   const {
@@ -123,7 +125,7 @@ export function StatsMatrix() {
   return (
     <div className="space-y-8">
       {/* Combined Filter Section */}
-      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-6">
+      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
         {/* Rank Filter */}
         <RankFilter
           currentRank={currentRank}
@@ -139,6 +141,14 @@ export function StatsMatrix() {
           setIsOpen={setIsLaneOpen}
           lanes={lanes}
         />
+      </div>
+
+      {/* Last Updated Display */}
+      <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
+        <CalendarIcon className="h-4 w-4 mr-1" />
+        <span>
+          最終更新日: {formatYYYYMMDDtoISO(stats.data[0][1][0].dtstatdate)}
+        </span>
       </div>
 
       {/* Stats Table */}

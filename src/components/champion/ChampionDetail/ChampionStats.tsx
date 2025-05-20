@@ -3,6 +3,8 @@
 import { useState, memo } from 'react';
 import { HeroStats, RankRange, Lane } from '@/types';
 import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
+import { formatYYYYMMDDtoISO } from '@/utils/format';
+import { CalendarIcon } from '@heroicons/react/24/outline';
 
 interface ChampionStatsProps {
   stats: Record<RankRange, Record<Lane, HeroStats>>;
@@ -74,8 +76,12 @@ export const ChampionStats = memo(function ChampionStats({
                   key={lane}
                   className="group rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5"
                 >
-                  <h3 className="text-lg font-medium bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent group-hover:to-blue-600 dark:group-hover:to-blue-300 transition-all">
-                    {laneDisplayNames[lane]}レーン
+                  <h3 className="text-lg font-medium bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent group-hover:to-blue-600 dark:group-hover:to-blue-300 transition-all flex items-center justify-between">
+                    <span>{laneDisplayNames[lane]}レーン</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                      <CalendarIcon className="w-3.5 h-3.5 inline-block mr-1 mb-1" />
+                      最終更新日: {formatYYYYMMDDtoISO(laneStats.dtstatdate)}
+                    </span>
                   </h3>
 
                   <div className="mt-4 space-y-4">
