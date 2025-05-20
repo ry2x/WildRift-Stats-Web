@@ -25,10 +25,7 @@ export default async function Page({ params }: ChampionDetailPageProps) {
   const headersList = await headers();
   const host = headersList.get('host') || '';
   // More secure protocol decisions
-  const protocol =
-    host.startsWith('localhost') || host.includes('127.0.0.1')
-      ? 'http'
-      : 'https';
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
   if (!championId) {
     notFound();
