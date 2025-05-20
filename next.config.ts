@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
     ],
   },
   assetPrefix:
-    process.env.NODE_ENV === 'development' ? 'http://192.168.0.10:3000' : '',
+    process.env.NODE_ENV === 'development'
+      ? `http://${process.env.DEV_HOST || 'localhost'}:${process.env.DEV_PORT || '3000'}`
+      : '',
 };
 
 export default nextConfig;
