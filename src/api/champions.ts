@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios';
-import { Champion, Champions } from '../types/champion';
+import { Champion, Champions } from '@/types/champion';
 import {
   ApiError,
   NetworkError,
   ValidationError,
   withErrorHandling,
-} from '../utils/errorHandling';
+} from '@/utils/errorHandling';
 
 const CHAMPION_API_URL =
   'https://ry2x.github.io/WildRift-Merged-Champion-Data/data_ja_JP.json';

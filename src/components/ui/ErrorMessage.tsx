@@ -29,7 +29,7 @@ export function ErrorMessage({ message, error, onRetry }: ErrorMessageProps) {
   return (
     <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4">
       <div className="flex items-start">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <ExclamationCircleIcon
             className="h-5 w-5 text-red-400 dark:text-red-500"
             aria-hidden="true"

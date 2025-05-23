@@ -16,17 +16,17 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
 
     // Different colors for each level
     if (currentIndex === 0)
-      return 'bg-gradient-to-r from-emerald-400 to-green-300';
+      return 'bg-linear-to-r from-emerald-400 to-green-300';
     if (currentIndex === 1)
-      return 'bg-gradient-to-r from-yellow-400 to-amber-300';
-    return 'bg-gradient-to-r from-orange-400 to-orange-300';
+      return 'bg-linear-to-r from-yellow-400 to-amber-300';
+    return 'bg-linear-to-r from-orange-400 to-orange-300';
   };
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Description Card */}
-      <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
+      <div className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+        <h2 className="text-xl font-semibold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
           チャンピオン説明
         </h2>
         <p className="mt-4 leading-relaxed text-slate-700 dark:text-slate-300">
@@ -37,8 +37,8 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
       {/* Stats and Info Card */}
       <div className="space-y-4">
         {/* Champion Stats */}
-        <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
-          <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent mb-4">
+        <div className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+          <h2 className="text-xl font-semibold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent mb-4">
             チャンピオンのステータス
           </h2>
 
@@ -107,10 +107,10 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
 
         {/* Free Champion Status */}
         {champion.is_free && (
-          <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+          <div className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
             <div className="flex items-center gap-3">
               <span className="text-2xl">⭐</span>
-              <span className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent font-medium">
+              <span className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent font-medium">
                 今週のフリーチャンピオンです！
               </span>
             </div>

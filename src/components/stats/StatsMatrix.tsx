@@ -125,7 +125,7 @@ export function StatsMatrix() {
   return (
     <div className="space-y-8">
       {/* Combined Filter Section */}
-      <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
+      <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
         {/* Rank Filter */}
         <RankFilter
           currentRank={currentRank}

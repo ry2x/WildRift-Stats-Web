@@ -42,7 +42,7 @@ export const StatsTable: FC<StatsTableProps> = ({
     <div className="w-full overflow-x-auto">
       <table className="w-full min-w-[640px] rounded-lg overflow-hidden shadow-xl">
         <thead>
-          <tr className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <tr className="bg-linear-to-r from-blue-600 to-purple-600 text-white">
             <th className="w-48 px-4 py-3 text-left text-sm font-semibold">
               チャンピオン
             </th>
@@ -68,7 +68,7 @@ export const StatsTable: FC<StatsTableProps> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200/20 dark:divide-gray-700/20 bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 backdrop-blur-sm">
+        <tbody className="divide-y divide-gray-200/20 dark:divide-gray-700/20 bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 backdrop-blur-sm">
           {sortedChampions.map((champion: HeroStats) => {
             const championData = championMap.get(champion.hero_id);
             if (!championData) return null;
@@ -76,13 +76,13 @@ export const StatsTable: FC<StatsTableProps> = ({
             return (
               <tr
                 key={champion.hero_id}
-                className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 dark:hover:from-blue-900/50 dark:hover:to-purple-900/50 transition-all duration-300"
+                className="hover:bg-linear-to-r hover:from-blue-50/50 hover:to-purple-50/50 dark:hover:from-blue-900/50 dark:hover:to-purple-900/50 transition-all duration-300"
               >
                 <td className="w-48 px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/champions/${championData.id.toLowerCase()}`}
-                      className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 hover:scale-110 transition-transform duration-200"
+                      className="relative shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 hover:scale-110 transition-transform duration-200"
                     >
                       <Image
                         src={`https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${championData.id}.png`}
