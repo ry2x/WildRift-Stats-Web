@@ -25,10 +25,10 @@ export const EmptyState: FC<EmptyStateProps> = ({
   children,
 }) => {
   return (
-    <div className="rounded-lg bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-6 shadow-xl backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
+    <div className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-6 shadow-xl backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
       {children || (
         <div className="text-center">
-          <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-2">
+          <h3 className="text-lg font-semibold bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-2">
             {title}
           </h3>
 
@@ -45,7 +45,7 @@ export const EmptyState: FC<EmptyStateProps> = ({
           {onRetry && (
             <button
               onClick={onRetry}
-              className="mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
+              className="mt-2 px-4 py-2 rounded-lg bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-md text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
             >
               再試行
             </button>

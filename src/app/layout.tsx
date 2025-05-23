@@ -5,6 +5,7 @@ import { ChampionProvider } from '@/contexts/ChampionContext';
 import { StatsProvider } from '@/contexts/StatsContext';
 import { FilterProvider } from '@/contexts/FilterContext';
 import { SortProvider } from '@/contexts/SortContext';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import './globals.css';
 
 const geistSans = Geist({
@@ -28,19 +29,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <FilterProvider>
-          <SortProvider>
-            <ChampionProvider>
-              <StatsProvider>
-                <MainLayout>{children}</MainLayout>
-              </StatsProvider>
-            </ChampionProvider>
-          </SortProvider>
-        </FilterProvider>
+        <ThemeProvider>
+          <FilterProvider>
+            <SortProvider>
+              <ChampionProvider>
+                <StatsProvider>
+                  <MainLayout>{children}</MainLayout>
+                </StatsProvider>
+              </ChampionProvider>
+            </SortProvider>
+          </FilterProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

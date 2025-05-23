@@ -71,18 +71,18 @@ export function ChampionDetailsMain({
         {/* Multi-layered gradient overlay */}
         <div className="absolute inset-0">
           {/* Base gradient layer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/5 dark:via-gray-900/10 to-slate-900/70 dark:to-gray-900/80" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/5 dark:via-gray-900/10 to-slate-900/70 dark:to-gray-900/80" />
 
           {/* Middle transition layer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/10 dark:via-gray-900/30 to-slate-100/60 dark:to-gray-900/70" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-50/10 dark:via-gray-900/30 to-slate-100/60 dark:to-gray-900/70" />
 
           {/* Bottom area layer */}
-          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-gradient-to-t from-white/80 dark:from-gray-900/90 to-transparent" />
+          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-linear-to-t from-white/80 dark:from-gray-900/90 to-transparent" />
         </div>
 
         {/* Text protection layer with backdrop */}
         <div className="absolute bottom-0 h-48 inset-x-0">
-          <div className="absolute inset-0 bg-gradient-to-t from-white/60 dark:from-gray-900/80 via-white/30 dark:via-gray-900/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-white/60 dark:from-gray-900/80 via-white/30 dark:via-gray-900/50 to-transparent" />
         </div>
 
         {/* Champion info section with enhanced layout */}
@@ -92,10 +92,10 @@ export function ChampionDetailsMain({
             <div className="flex flex-col items-center space-y-4">
               {/* Name and title */}
               <div className="text-center">
-                <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_0_rgb(0_0_0_/_90%)]">
+                <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] [text-shadow:0_2px_0_rgb(0_0_0/90%)]">
                   {champion.name}
                 </h1>
-                <p className="text-2xl text-slate-200 italic drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_0_rgb(0_0_0_/_90%)]">
+                <p className="text-2xl text-slate-200 italic drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] [text-shadow:0_2px_0_rgb(0_0_0/90%)]">
                   {champion.title}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export function ChampionDetailsMain({
                   {champion.roles.map(role => (
                     <span
                       key={role}
-                      className="inline-block rounded bg-gradient-to-r from-blue-100/80 to-indigo-100/80 dark:from-blue-800/90 dark:to-indigo-800/90 px-3 py-1.5 text-sm font-medium text-blue-800 dark:text-blue-100 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20"
+                      className="inline-block rounded bg-linear-to-r from-blue-100/80 to-indigo-100/80 dark:from-blue-800/90 dark:to-indigo-800/90 px-3 py-1.5 text-sm font-medium text-blue-800 dark:text-blue-100 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20"
                     >
                       {roleLabels[role]}
                     </span>
@@ -119,7 +119,7 @@ export function ChampionDetailsMain({
                   {champion.lanes.map(lane => (
                     <span
                       key={lane}
-                      className="inline-block rounded bg-gradient-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-800/90 dark:to-pink-800/90 px-3 py-1.5 text-sm font-medium text-purple-800 dark:text-purple-100 backdrop-blur-sm border border-purple-200/20 dark:border-purple-400/20"
+                      className="inline-block rounded bg-linear-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-800/90 dark:to-pink-800/90 px-3 py-1.5 text-sm font-medium text-purple-800 dark:text-purple-100 backdrop-blur-sm border border-purple-200/20 dark:border-purple-400/20"
                     >
                       {laneLabels[lane]}
                     </span>
@@ -132,9 +132,9 @@ export function ChampionDetailsMain({
       </div>
 
       {/* Content Section with adjusted position */}
-      <div className="relative bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 -mt-10">
+      <div className="relative bg-linear-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 -mt-10">
         {/* Adjusted top gradient */}
-        <div className="absolute inset-x-0 -top-40 h-40 bg-gradient-to-b from-transparent via-white/95 dark:via-gray-900/95 to-white dark:to-gray-900" />
+        <div className="absolute inset-x-0 -top-40 h-40 bg-linear-to-b from-transparent via-white/95 dark:via-gray-900/95 to-white dark:to-gray-900" />
 
         {/* Content wrapper with minimal top padding */}
         <div className="relative max-w-7xl mx-auto px-4 pt-0 pb-6 space-y-12">
