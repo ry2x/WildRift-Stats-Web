@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios';
-import { WinRates } from '../types/stats';
+import { WinRates } from '@/types/stats';
 import {
   ApiError,
   NetworkError,
   ValidationError,
   withErrorHandling,
-} from '../utils/errorHandling';
+} from '@/utils/errorHandling';
 
 const STATS_API_URL =
   'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2';
