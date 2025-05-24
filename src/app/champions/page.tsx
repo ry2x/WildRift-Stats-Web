@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { ChampionGrid } from '@/components/champion/ChampionCards/ChampionGrid';
+import { ChampionGrid } from '@/components/ChampionCards';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';
 import { Loading } from '@/components/ui/Loading';
 

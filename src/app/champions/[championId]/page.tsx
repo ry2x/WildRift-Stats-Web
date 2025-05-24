@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { Lane, RankRange, HeroStats, Champion, Champions } from '@/types';
-import { ChampionDetailPage } from '@/components/champion/ChampionDetail/ChampionDetailPage';
+import { ChampionDetailPage } from '@/components/ChampionDetail';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 
 interface ChampionDetailPageProps {
