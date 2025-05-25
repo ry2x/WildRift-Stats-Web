@@ -1,6 +1,6 @@
 'use client';
 
-import { RoleKey, LaneKey } from '@/types';
+import { RoleKey, LaneKey } from '@/types/champion';
 import { SortKey, SortOrder } from '@/contexts/SortContext';
 import {
   ChevronUpIcon,

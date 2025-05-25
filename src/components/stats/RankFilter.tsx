@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { RankRange } from '@/types';
+import { RankRange } from '@/types/stats';
 import { rankDisplayNames } from '@/constants/game';
 import { GlobeAltIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 

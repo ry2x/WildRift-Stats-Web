@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, memo } from 'react';
-import { HeroStats, RankRange, Lane } from '@/types';
+import { HeroStats, RankRange, Lane } from '@/types/stats';
 import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
 import { formatYYYYMMDDtoISO } from '@/utils/format';
 import { CalendarIcon } from '@heroicons/react/24/outline';

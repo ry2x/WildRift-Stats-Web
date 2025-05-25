@@ -13,7 +13,7 @@ import type {
   ChampionServiceConfig,
   RoleKey,
   LaneKey,
-} from './types';
+} from '@/types/champion';
 
 // Default configuration
 const DEFAULT_CONFIG: ChampionServiceConfig = {

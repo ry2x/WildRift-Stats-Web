@@ -8,7 +8,7 @@ import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
 import { Loading } from '@/components/ui/Loading';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
-import { RoleKey, LaneKey } from '@/types';
+import { RoleKey, LaneKey } from '@/types/champion';
 import { useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 

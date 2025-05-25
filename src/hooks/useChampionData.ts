@@ -10,12 +10,7 @@ import {
   filterChampionsByLane,
   sortChampions as sortChampionsUtil,
 } from '../services/champions/utils';
-import type {
-  Champions,
-  Champion,
-  RoleKey,
-  LaneKey,
-} from '../services/champions/types';
+import type { Champions, Champion, RoleKey, LaneKey } from '@/types/champion';
 
 export interface UseChampionDataOptions {
   autoFetch?: boolean;

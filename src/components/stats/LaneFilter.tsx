@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Lane } from '@/types';
+import { Lane } from '@/types/stats';
 import { laneDisplayNames } from '@/constants/game';
 import { MapIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 

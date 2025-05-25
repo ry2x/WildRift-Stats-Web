@@ -1,12 +1,5 @@
-import type {
-  Champion,
-  Champions,
-  HeroStats,
-  Lane,
-  RankRange,
-  WinRates,
-} from '@/types';
-
+import type { HeroStats, Lane, RankRange, WinRates } from '@/types/stats';
+import type { Champion, Champions } from '@/types/champion';
 /**
  * Transform champion data to a map for easier lookup
  * @param champions - Array of champion data

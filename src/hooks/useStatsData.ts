@@ -11,12 +11,7 @@ import {
   getStatsByRankAndLane as getStatsByRankAndLaneService,
   getAverageWinRate as getAverageWinRateService,
 } from '../services/stats/api';
-import type {
-  WinRates,
-  HeroStats,
-  RankRange,
-  Lane,
-} from '../services/stats/types';
+import type { WinRates, HeroStats, RankRange, Lane } from '@/types/stats';
 
 export interface UseStatsDataOptions {
   autoFetch?: boolean;

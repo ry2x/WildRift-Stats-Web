@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Champion, HeroStats } from '@/types';
+import { Champion } from '@/types/champion';
+import { HeroStats } from '@/types/stats';
 import { roleLabels } from '@/constants/game';
 
 interface ChampionCardProps {

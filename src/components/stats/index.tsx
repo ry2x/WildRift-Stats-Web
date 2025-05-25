@@ -6,14 +6,8 @@ import { useChampions } from '@/contexts/ChampionContext';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Loading } from '@/components/ui/Loading';
 import { EmptyState } from '@/components/ui/EmptyState';
-import {
-  RankRange,
-  Lane,
-  HeroStats,
-  SortKey,
-  SortOrder,
-  WinRates,
-} from '@/types';
+import { RankRange, Lane, HeroStats, WinRates } from '@/types/stats';
+import { SortKey, SortOrder } from '@/types/sort';
 import { RankFilter } from './RankFilter';
 import { LaneFilter } from './LaneFilter';
 import { StatsTable } from './StatsTable';

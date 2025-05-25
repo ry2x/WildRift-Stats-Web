@@ -2,7 +2,7 @@
  * Champion data utilities for data transformation and validation
  */
 
-import type { Champion, Champions, LaneKey, RoleKey } from './types';
+import type { Champion, Champions, LaneKey, RoleKey } from '@/types/champion';
 import { ValidationError } from '../api/error';
 
 /**

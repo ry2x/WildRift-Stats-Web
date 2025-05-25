@@ -2,7 +2,9 @@ import { FC } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
-import { Champion, HeroStats, SortKey, SortOrder } from '@/types';
+import { Champion } from '@/types/champion';
+import { HeroStats } from '@/types/stats';
+import { SortKey, SortOrder } from '@/types/sort';
 import { getWinRateColor } from '@/utils/statsStyle';
 import { sortOptions } from '@/constants/stats';
 

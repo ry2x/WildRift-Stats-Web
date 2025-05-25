@@ -2,7 +2,7 @@
  * Stats data utilities for data transformation and validation
  */
 
-import type { WinRates, HeroStats, RankRange, Lane } from './types';
+import type { WinRates, HeroStats, RankRange, Lane } from '@/types/stats';
 import { ValidationError } from '../api/error';
 
 /**

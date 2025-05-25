@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
-import { Champion, Champions } from '@/types';
+import { Champion, Champions } from '@/types/champion';
 import { toKatakana } from '@/utils/convertHiragana';
 import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';

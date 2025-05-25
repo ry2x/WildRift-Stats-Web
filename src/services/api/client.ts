@@ -2,39 +2,24 @@
  * Common API client functionality for data fetching
  * Provides a unified interface for API communication and caching
  */
+import type {
+  FetchOptions,
+  ApiClientOptions,
+  CacheOptions,
+  ApiClient,
+  Cache,
+  CacheEntry,
+} from '@/types/api';
 
-export interface FetchOptions<T> {
-  url: string;
-  validator: (data: unknown) => data is T;
-  cacheKey: string;
-  forceRefresh?: boolean;
-}
-
-export interface ApiClientOptions {
-  fetch?: typeof globalThis.fetch;
-  cacheFactory?: <T>(options: CacheOptions) => Cache<T>;
-}
-
-export interface CacheOptions {
-  key: string;
-  storage?: 'memory' | 'localStorage';
-  getExpirationTime?: () => number;
-}
-
-export interface ApiClient {
-  fetchData: <T>(options: FetchOptions<T>) => Promise<T>;
-}
-
-export interface Cache<T> {
-  get(): T | null;
-  set(data: T): void;
-  clear(): void;
-}
-
-export interface CacheEntry<T> {
-  data: T;
-  expiresAt: number;
-}
+// Re-export types for backward compatibility
+export type {
+  FetchOptions,
+  ApiClientOptions,
+  CacheOptions,
+  ApiClient,
+  Cache,
+  CacheEntry,
+};
 
 /**
  * Create a unified API client with configurable fetch and cache dependencies

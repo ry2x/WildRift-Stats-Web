@@ -1,37 +1,15 @@
 /**
  * Common error types and handling utilities for API operations
  */
+import {
+  ApiError,
+  NetworkError,
+  ValidationError,
+  CacheError,
+} from '@/types/api';
 
-export class ApiError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
-export class NetworkError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'NetworkError';
-  }
-}
-
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
-
-export class CacheError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'CacheError';
-  }
-}
+// Re-export for backward compatibility
+export { ApiError, NetworkError, ValidationError, CacheError };
 
 /**
  * Handle API errors and convert them to appropriate error types

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
-import { RankRange, WinRates } from '@/types';
+import { RankRange, WinRates } from '@/types/stats';
 import { useStatsData } from '@/hooks/useStatsData';
 
 // Context type definition
