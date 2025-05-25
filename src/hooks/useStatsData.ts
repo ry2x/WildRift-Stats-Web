@@ -5,8 +5,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import type { HeroStats, Lane, RankRange, WinRates } from '@/types/stats';
-
 import {
   getAverageWinRate as getAverageWinRateService,
   getChampionStats as getChampionStatsService,
@@ -14,6 +12,7 @@ import {
   getStats,
   getStatsByRankAndLane as getStatsByRankAndLaneService,
 } from '@/services/stats/api';
+import type { HeroStats, Lane, RankRange, WinRates } from '@/types/stats';
 
 export interface UseStatsDataOptions {
   autoFetch?: boolean;
