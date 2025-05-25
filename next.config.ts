@@ -23,13 +23,12 @@ const nextConfig: NextConfig = {
   assetPrefix:
     process.env.NODE_ENV === 'development'
       ? `http://${process.env.DEV_HOST || 'localhost'}:${process.env.DEV_PORT || '3000'}`
-      : '',
-  async rewrites() {
+      : '',  async rewrites() {
     return [
       {
         source: '/api/stats-proxy',
         destination:
-          'http://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2',
+          'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2',
       },
     ];
   },

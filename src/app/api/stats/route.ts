@@ -116,23 +116,8 @@ export async function GET(request: Request) {
     const { forceRefresh } = parseRequestOptions(request);
     const cacheConfig = getCacheConfig();
 
-    // Direct fetch from external API (server-side, no CORS issues)
-    const response = await fetch(
-      'http://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2',
-      {
-        next: forceRefresh
-          ? { revalidate: 0 }
-          : { revalidate: cacheConfig.maxAge },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch stats: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = (await response.json()) as unknown;
+    // Fetch data using the new service layer
+    const data = await getStats({ forceRefresh });
 
     return createSuccessResponse(data, {
       maxAge: cacheConfig.maxAge,
