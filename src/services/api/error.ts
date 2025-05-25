@@ -41,10 +41,15 @@ export function handleApiError(error: unknown): Error {
   if (error instanceof NetworkError) return error;
   if (error instanceof ValidationError) return error;
   if (error instanceof CacheError) return error;
-
   // Handle fetch API errors
-  if (error instanceof TypeError && error.message.includes('fetch')) {
-    return new NetworkError('ネットワークエラーが発生しました');
+  if (
+    error instanceof TypeError &&
+    (error.message.includes('fetch') ||
+      error.message.includes('Failed to parse URL'))
+  ) {
+    return new NetworkError(
+      'ネットワークエラーが発生しました: ' + error.message
+    );
   }
 
   // Handle unknown errors
