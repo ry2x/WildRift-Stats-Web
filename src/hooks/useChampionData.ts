@@ -7,12 +7,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Champion, Champions, LaneKey, RoleKey } from '@/types/champion';
 
-import { getChampions } from '../services/champions/api';
+import { getChampions } from '@/services/champions/api';
 import {
   filterChampionsByLane,
   filterChampionsByRole,
   sortChampions as sortChampionsUtil,
-} from '../services/champions/utils';
+} from '@/services/champions/utils';
 
 export interface UseChampionDataOptions {
   autoFetch?: boolean;

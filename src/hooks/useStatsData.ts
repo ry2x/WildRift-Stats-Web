@@ -13,7 +13,7 @@ import {
   getChampionTierList as getTierListService,
   getStats,
   getStatsByRankAndLane as getStatsByRankAndLaneService,
-} from '../services/stats/api';
+} from '@/services/stats/api';
 
 export interface UseStatsDataOptions {
   autoFetch?: boolean;
