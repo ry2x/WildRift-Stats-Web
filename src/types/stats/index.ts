@@ -3,5 +3,5 @@
  * @module types/stats
  */
 
-export * from './stats';
 export * from './service';
+export * from './stats';

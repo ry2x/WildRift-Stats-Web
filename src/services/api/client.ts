@@ -3,22 +3,22 @@
  * Provides a unified interface for API communication and caching
  */
 import type {
-  FetchOptions,
-  ApiClientOptions,
-  CacheOptions,
   ApiClient,
+  ApiClientOptions,
   Cache,
   CacheEntry,
+  CacheOptions,
+  FetchOptions,
 } from '@/types/api';
 
 // Re-export types for backward compatibility
 export type {
-  FetchOptions,
-  ApiClientOptions,
-  CacheOptions,
   ApiClient,
+  ApiClientOptions,
   Cache,
   CacheEntry,
+  CacheOptions,
+  FetchOptions,
 };
 
 /**

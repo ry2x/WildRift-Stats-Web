@@ -1,12 +1,13 @@
-import { FC } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
-import { Champion } from '@/types/champion';
-import { HeroStats } from '@/types/stats';
-import { SortKey, SortOrder } from '@/types/sort';
-import { getWinRateColor } from '@/utils/statsStyle';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FC } from 'react';
+
 import { sortOptions } from '@/constants/stats';
+import { Champion } from '@/types/champion';
+import { SortKey, SortOrder } from '@/types/sort';
+import { HeroStats } from '@/types/stats';
+import { getWinRateColor } from '@/utils/statsStyle';
 
 interface StatsTableProps {
   sortedChampions: HeroStats[];

@@ -1,8 +1,9 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
-import { RankRange, WinRates } from '@/types/stats';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+
 import { useStatsData } from '@/hooks/useStatsData';
+import { RankRange, WinRates } from '@/types/stats';
 
 // Context type definition
 interface StatsContextType {

@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import { Champion } from '@/types/champion';
 
 interface ChampionBasicInfoProps {

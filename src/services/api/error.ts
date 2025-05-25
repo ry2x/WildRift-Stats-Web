@@ -3,13 +3,13 @@
  */
 import {
   ApiError,
+  CacheError,
   NetworkError,
   ValidationError,
-  CacheError,
 } from '@/types/api';
 
 // Re-export for backward compatibility
-export { ApiError, NetworkError, ValidationError, CacheError };
+export { ApiError, CacheError, NetworkError, ValidationError };
 
 /**
  * Handle API errors and convert them to appropriate error types

@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getChampions } from '@/services/champions/api';
+
 import {
   handleApiError,
   isApiError,
   isNetworkError,
 } from '@/services/api/error';
+import { getChampions } from '@/services/champions/api';
 
 /**
  * Calculate seconds until next 10:00 AM

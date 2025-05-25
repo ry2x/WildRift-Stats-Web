@@ -3,17 +3,18 @@
  * Provides clean interface for stats data operations
  */
 
-import { createApiClient, type ApiClient } from '@/services/api/client';
+import { type ApiClient, createApiClient } from '@/services/api/client';
 import { withErrorHandling } from '@/services/api/error';
-import { transformStatsData, validateStatsData } from './utils';
 import type {
-  WinRates,
+  HeroStats,
+  Lane,
+  RankRange,
   StatsFetchOptions,
   StatsServiceConfig,
-  RankRange,
-  Lane,
-  HeroStats,
+  WinRates,
 } from '@/types/stats';
+
+import { transformStatsData, validateStatsData } from './utils';
 
 // Default configuration
 const DEFAULT_CONFIG: StatsServiceConfig = {

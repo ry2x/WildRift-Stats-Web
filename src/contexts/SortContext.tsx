@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
+
 import { Champion } from '@/types/champion';
 
 export type SortKey = 'name' | 'difficult' | 'damage' | 'survive' | 'utility';

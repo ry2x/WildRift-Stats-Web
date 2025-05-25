@@ -1,16 +1,18 @@
 'use client';
 
-import { ChampionCard } from './ChampionCard';
-import { ChampionFilterAndSort } from './ChampionFilterAndSort';
-import { ChampionSearch } from './ChampionSearch';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { Loading } from '@/components/ui/Loading';
 import { useChampions } from '@/contexts/ChampionContext';
 import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
-import { Loading } from '@/components/ui/Loading';
-import { ErrorMessage } from '@/components/ui/ErrorMessage';
-import { RoleKey, LaneKey } from '@/types/champion';
-import { useEffect, useMemo, useCallback, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { LaneKey, RoleKey } from '@/types/champion';
+
+import { ChampionCard } from './ChampionCard';
+import { ChampionFilterAndSort } from './ChampionFilterAndSort';
+import { ChampionSearch } from './ChampionSearch';
 
 export function ChampionGrid() {
   const { loading, error, filteredChampions, retryFetch } = useChampions();

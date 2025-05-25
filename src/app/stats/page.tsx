@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+
 import { StatsMatrix } from '@/components/stats';
 import { Loading } from '@/components/ui/Loading';
 

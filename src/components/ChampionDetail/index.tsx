@@ -1,15 +1,16 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+
+import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { Loading } from '@/components/ui/Loading';
+import { laneLabels, roleLabels } from '@/constants/game';
 import { useChampions } from '@/contexts/ChampionContext';
 import { useStats } from '@/contexts/StatsContext';
-import { Loading } from '@/components/ui/Loading';
-import { ErrorMessage } from '@/components/ui/ErrorMessage';
-import { HeroStats, Lane, RankRange } from '@/types/stats';
 import { Champion } from '@/types/champion';
-import { laneLabels, roleLabels } from '@/constants/game';
-import { notFound } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import { HeroStats, Lane, RankRange } from '@/types/stats';
 
 // Import original components
 import { ChampionImage } from './ChampionImage';

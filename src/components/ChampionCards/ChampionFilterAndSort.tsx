@@ -1,16 +1,17 @@
 'use client';
 
-import { RoleKey, LaneKey } from '@/types/champion';
-import { SortKey, SortOrder } from '@/contexts/SortContext';
 import {
-  ChevronUpIcon,
-  UserGroupIcon,
-  MapIcon,
   AdjustmentsHorizontalIcon,
+  ChevronUpIcon,
+  MapIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import { laneLabels, roleLabels, sortOptions } from '@/constants/game';
+import { SortKey, SortOrder } from '@/contexts/SortContext';
+import { LaneKey, RoleKey } from '@/types/champion';
 
 interface ChampionFilterAndSortProps {
   roles: RoleKey[];
