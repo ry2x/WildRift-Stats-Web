@@ -1,196 +1,105 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useMemo,
-  useCallback,
-} from 'react';
+import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
 import { Champion, Champions } from '@/types';
 import { toKatakana } from '@/utils/convertHiragana';
 import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
-import { withErrorHandling } from '@/utils/errorHandling';
+import { useChampionData } from '@/hooks/useChampionData';
 
 export interface ChampionContextType {
   champions: Champions;
   loading: boolean;
-  error: Error | null; // unknown型を具体的な型に変更
+  error: Error | null;
   refreshChampions: () => Promise<void>;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filteredChampions: Champions;
   retryFetch: () => Promise<void>;
+  getChampionById: (id: string) => Champion | undefined;
+  getChampionByHeroId: (heroId: number) => Champion | undefined;
 }
 
 const ChampionContext = createContext<ChampionContextType | null>(null);
 
 export function ChampionProvider({ children }: { children: ReactNode }) {
-  const [champions, setChampions] = useState<Champions>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const { selectedRoles, selectedLanes } = useFilters();
   const { sortChampions } = useSort();
 
-  // 検索用語の正規化をメモ化
-  const normalizedSearchTerm = useMemo(
-    () => toKatakana(searchTerm.toLowerCase()),
-    [searchTerm]
-  );
+  // Use the new custom hook for data management
+  const {
+    champions: allChampions,
+    loading,
+    error,
+    refetch,
+    getChampionById,
+    getChampionByHeroId,
+  } = useChampionData();
 
-  // フィルター条件のメモ化
-  const filterConditions = useMemo(
-    () => ({
-      hasRoles: selectedRoles.size > 0,
-      hasLanes: selectedLanes.size > 0,
-      roles: Array.from(selectedRoles),
-      lanes: Array.from(selectedLanes),
-    }),
-    [selectedRoles, selectedLanes]
-  );
+  // Local search term state (for backward compatibility)
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // チャンピオンフィルタリング関数のメモ化
-  const filterChampion = useCallback(
-    (champion: Champion) => {
-      // 検索フィルター
-      if (normalizedSearchTerm) {
+  // Filter champions based on context filters
+  const filteredChampions = useMemo(() => {
+    let filtered = [...allChampions];
+
+    // Apply search filter with hiragana conversion
+    if (searchTerm) {
+      const normalizedSearchTerm = toKatakana(searchTerm.toLowerCase());
+      filtered = filtered.filter(champion => {
         const name = champion.name.toLowerCase();
         const katakanaName = toKatakana(name);
-        if (
-          !name.includes(normalizedSearchTerm) &&
-          !katakanaName.includes(normalizedSearchTerm)
-        ) {
-          return false;
-        }
-      }
-
-      // ロールフィルター（AND検索）
-      if (
-        filterConditions.hasRoles &&
-        !filterConditions.roles.every(role => champion.roles.includes(role))
-      ) {
-        return false;
-      }
-
-      // レーンフィルター（AND検索）
-      if (
-        filterConditions.hasLanes &&
-        !filterConditions.lanes.every(lane => champion.lanes.includes(lane))
-      ) {
-        return false;
-      }
-
-      return true;
-    },
-    [normalizedSearchTerm, filterConditions]
-  );
-
-  // フィルター済みチャンピオンのメモ化
-  const filteredChampions = useMemo(
-    () => sortChampions(champions.filter(filterChampion)),
-    [champions, filterChampion, sortChampions]
-  );
-
-  // Optimized fetch with caching and error handling
-  const fetchChampions = useCallback(async (forceRefresh = false) => {
-    return withErrorHandling(
-      async () => {
-        try {
-          const response = await fetch('/api/champions', {
-            cache: forceRefresh ? 'no-store' : 'force-cache',
-            next: forceRefresh
-              ? undefined
-              : {
-                  revalidate: getSecondsUntilNextUpdate(),
-                  tags: ['champions'],
-                },
-            headers: forceRefresh
-              ? {
-                  'Cache-Control': 'no-cache',
-                }
-              : undefined,
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch champions');
-          }
-
-          const data = (await response.json()) as Champions;
-          setChampions(data);
-          setError(null);
-        } catch (err) {
-          if (err instanceof Error) {
-            setError(err);
-          } else {
-            setError(new Error('An unknown error occurred'));
-          }
-        }
-      },
-      {
-        retry: true,
-        maxRetries: 3,
-        onError: err => {
-          console.error('Error fetching champions:', err);
-          if (err instanceof Error) {
-            setError(err);
-          } else {
-            setError(new Error('An unknown error occurred'));
-          }
-        },
-      }
-    );
-  }, []);
-
-  // Optimized refresh with proper cache invalidation
-  const refreshChampions = useCallback(async () => {
-    try {
-      setLoading(true);
-      await fetchChampions(true);
-    } finally {
-      setLoading(false);
+        return (
+          name.includes(normalizedSearchTerm) ||
+          katakanaName.includes(normalizedSearchTerm)
+        );
+      });
     }
-  }, [fetchChampions]);
 
-  // Retry fetch function
-  const retryFetch = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      await fetchChampions();
-    } finally {
-      setLoading(false);
+    // Apply role filter (AND search)
+    if (selectedRoles.size > 0) {
+      const roles = Array.from(selectedRoles);
+      filtered = filtered.filter(champion =>
+        roles.every(role => champion.roles.includes(role))
+      );
     }
-  }, [fetchChampions]);
 
-  // Initial fetch
-  useEffect(() => {
-    void fetchChampions().finally(() => setLoading(false));
-  }, [fetchChampions]);
+    // Apply lane filter (AND search)
+    if (selectedLanes.size > 0) {
+      const lanes = Array.from(selectedLanes);
+      filtered = filtered.filter(champion =>
+        lanes.every(lane => champion.lanes.includes(lane))
+      );
+    }
 
-  // Memoize context value
+    // Apply sorting
+    return sortChampions(filtered);
+  }, [allChampions, searchTerm, selectedRoles, selectedLanes, sortChampions]);
+
+  // Context value
   const contextValue = useMemo(
     () => ({
-      champions,
+      champions: allChampions,
       loading,
       error,
-      refreshChampions,
+      refreshChampions: () => refetch(true),
       searchTerm,
       setSearchTerm,
       filteredChampions,
-      retryFetch,
+      retryFetch: () => refetch(false),
+      getChampionById,
+      getChampionByHeroId,
     }),
     [
-      champions,
+      allChampions,
       loading,
       error,
-      refreshChampions,
+      refetch,
       searchTerm,
+      setSearchTerm,
       filteredChampions,
-      retryFetch,
+      getChampionById,
+      getChampionByHeroId,
     ]
   );
 
@@ -199,21 +108,6 @@ export function ChampionProvider({ children }: { children: ReactNode }) {
       {children}
     </ChampionContext.Provider>
   );
-}
-
-/**
- * Helper function to get seconds until next update time
- */
-function getSecondsUntilNextUpdate(): number {
-  const now = new Date();
-  const target = new Date(now);
-  target.setHours(10, 0, 0, 0);
-
-  if (now > target) {
-    target.setDate(target.getDate() + 1);
-  }
-
-  return Math.floor((target.getTime() - now.getTime()) / 1000);
 }
 
 export function useChampions() {
