@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { MainLayout } from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout';
 import { ChampionProvider } from '@/contexts/ChampionContext';
 import { StatsProvider } from '@/contexts/StatsContext';
 import { FilterProvider } from '@/contexts/FilterContext';

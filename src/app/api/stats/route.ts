@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
-import { fetchStats } from '@/api/stats';
+import { getStats } from '@/services/stats/api';
+import {
+  handleApiError,
+  isApiError,
+  isNetworkError,
+} from '@/services/api/error';
 
 /**
  * Calculate seconds until next 10:00 AM
@@ -15,6 +20,78 @@ function getSecondsUntilNextUpdate(): number {
   }
 
   return Math.floor((target.getTime() - now.getTime()) / 1000);
+}
+
+/**
+ * Create success response with cache headers
+ */
+function createSuccessResponse(
+  data: unknown,
+  cacheConfig: { maxAge: number; forceRefresh: boolean }
+) {
+  const { maxAge, forceRefresh } = cacheConfig;
+  const staleWhileRevalidate = 60; // 1 minute stale while revalidate
+
+  const cacheControl = forceRefresh
+    ? 'no-store'
+    : `public, max-age=${maxAge}, s-maxage=${maxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
+
+  return NextResponse.json(data, {
+    headers: {
+      'Cache-Control': cacheControl,
+      Vary: 'Cache-Control',
+      'X-Cache-Status': forceRefresh ? 'REVALIDATED' : 'CACHED',
+      'X-Next-Update': new Date(Date.now() + maxAge * 1000).toISOString(),
+      Age: '0',
+    },
+  });
+}
+
+/**
+ * Create error response with appropriate status and headers
+ */
+function createErrorResponse(error: Error) {
+  console.error('Error fetching stats:', error);
+
+  let status = 500;
+  let message = 'Failed to fetch champion stats';
+
+  if (isApiError(error)) {
+    status = error.statusCode;
+    message = error.message;
+  } else if (isNetworkError(error)) {
+    status = 503;
+    message = 'Service temporarily unavailable';
+  }
+
+  return NextResponse.json(
+    { error: message },
+    {
+      status,
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    }
+  );
+}
+
+/**
+ * Parse request options from headers
+ */
+function parseRequestOptions(request: Request) {
+  const cacheHeader = request.headers.get('cache-control') || '';
+  const forceRefresh = cacheHeader.includes('no-cache');
+
+  return { forceRefresh };
+}
+
+/**
+ * Get cache configuration
+ */
+function getCacheConfig() {
+  return {
+    maxAge: getSecondsUntilNextUpdate(),
+  };
 }
 
 /**
@@ -36,42 +113,18 @@ function getSecondsUntilNextUpdate(): number {
  */
 export async function GET(request: Request) {
   try {
-    // Get cache headers from request
-    const cacheHeader = request.headers.get('cache-control') || '';
-    const forceRefresh = cacheHeader.includes('no-cache');
+    const { forceRefresh } = parseRequestOptions(request);
+    const cacheConfig = getCacheConfig();
 
-    // Calculate cache duration
-    const maxAge = getSecondsUntilNextUpdate();
-    const staleWhileRevalidate = 60; // 1 minute stale while revalidate
+    // Fetch data using the new service layer
+    const data = await getStats({ forceRefresh });
 
-    // Use stale-while-revalidate strategy for better performance
-    const cacheControl = forceRefresh
-      ? 'no-store'
-      : `public, max-age=${maxAge}, s-maxage=${maxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
-
-    // Fetch all stats in one go
-    const data = await fetchStats(forceRefresh);
-
-    // Return response with optimized cache headers
-    return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': cacheControl,
-        Vary: 'Cache-Control',
-        'X-Cache-Status': forceRefresh ? 'REVALIDATED' : 'CACHED',
-        'X-Next-Update': new Date(Date.now() + maxAge * 1000).toISOString(),
-        Age: '0',
-      },
+    return createSuccessResponse(data, {
+      maxAge: cacheConfig.maxAge,
+      forceRefresh,
     });
   } catch (error) {
-    console.error('Error fetching stats:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch champion stats' },
-      {
-        status: 500,
-        headers: {
-          'Cache-Control': 'no-store',
-        },
-      }
-    );
+    const handledError = handleApiError(error);
+    return createErrorResponse(handledError);
   }
 }

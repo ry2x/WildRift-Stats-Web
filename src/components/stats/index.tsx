@@ -6,7 +6,14 @@ import { useChampions } from '@/contexts/ChampionContext';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Loading } from '@/components/ui/Loading';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { RankRange, Lane, HeroStats, SortKey, SortOrder } from '@/types';
+import {
+  RankRange,
+  Lane,
+  HeroStats,
+  SortKey,
+  SortOrder,
+  WinRates,
+} from '@/types';
 import { RankFilter } from './RankFilter';
 import { LaneFilter } from './LaneFilter';
 import { StatsTable } from './StatsTable';
@@ -33,16 +40,17 @@ export function StatsMatrix() {
   const [sortKey, setSortKey] = useState<SortKey>('win_rate');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [isRankOpen, setIsRankOpen] = useState(true);
-  const [isLaneOpen, setIsLaneOpen] = useState(true);
-
-  // Simple rank change without refresh
+  const [isLaneOpen, setIsLaneOpen] = useState(true); // Simple rank change without refresh - calls updateRank from StatsContext
   const handleRankClick = useCallback(
-    (rank: RankRange) => {
+    (rank: RankRange | 'all') => {
       if (rank === currentRank) return;
       setCurrentRank(rank);
     },
     [currentRank, setCurrentRank]
   );
+
+  // Convert currentRank to actual rank for data access
+  const actualRank: RankRange = currentRank === 'all' ? '0' : currentRank;
 
   // Initialize states based on window size and handle resize
   useEffect(() => {
@@ -78,10 +86,13 @@ export function StatsMatrix() {
     return (
       <ErrorMessage error={statsError || championsError} onRetry={retryStats} />
     );
-  }
+  } // Type guard for stats
+  const isValidStats = (stats: WinRates | null): stats is WinRates => {
+    return stats !== null && stats.data !== undefined;
+  };
 
   // Empty state
-  if (!stats?.data || !stats.data[currentRank]) {
+  if (!isValidStats(stats) || !stats.data[actualRank]) {
     return (
       <EmptyState
         title="統計情報が見つかりませんでした"
@@ -91,12 +102,11 @@ export function StatsMatrix() {
     );
   }
 
-  const currentStats = stats.data[currentRank];
+  const currentStats = stats.data[actualRank];
   const lanes = Object.keys(currentStats) as Lane[];
-
   // Sort champions based on current sort key and order
   const sortedChampions =
-    currentStats[selectedLane]?.sort((a, b) => {
+    currentStats[selectedLane]?.sort((a: HeroStats, b: HeroStats) => {
       const getValueFromKey = (champion: HeroStats) => {
         switch (sortKey) {
           case 'win_rate':
@@ -128,7 +138,7 @@ export function StatsMatrix() {
       <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
         {/* Rank Filter */}
         <RankFilter
-          currentRank={currentRank}
+          currentRank={actualRank}
           onChange={handleRankClick}
           isOpen={isRankOpen}
           setIsOpen={setIsRankOpen}
@@ -141,16 +151,15 @@ export function StatsMatrix() {
           setIsOpen={setIsLaneOpen}
           lanes={lanes}
         />
-      </div>
-
+      </div>{' '}
       {/* Last Updated Display */}
       <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
         <CalendarIcon className="h-4 w-4 mr-1" />
         <span>
-          最終更新日: {formatYYYYMMDDtoISO(stats.data[0][1][0].dtstatdate)}
+          最終更新日:{' '}
+          {formatYYYYMMDDtoISO(stats.data[actualRank][1][0].dtstatdate)}
         </span>
       </div>
-
       {/* Stats Table */}
       <StatsTable
         sortedChampions={sortedChampions}

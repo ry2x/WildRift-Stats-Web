@@ -13,12 +13,26 @@ const nextConfig: NextConfig = {
         hostname: 'game.gtimg.cn',
         pathname: '/images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'mlol.qt.qq.com',
+        pathname: '/go/**',
+      },
     ],
   },
   assetPrefix:
     process.env.NODE_ENV === 'development'
       ? `http://${process.env.DEV_HOST || 'localhost'}:${process.env.DEV_PORT || '3000'}`
       : '',
+  async rewrites() {
+    return [
+      {
+        source: '/api/stats-proxy',
+        destination:
+          'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
