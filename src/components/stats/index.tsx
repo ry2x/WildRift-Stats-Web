@@ -1,24 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useStats } from '@/contexts/StatsContext';
-import { useChampions } from '@/contexts/ChampionContext';
+import { CalendarIcon } from '@heroicons/react/24/outline';
+import { useCallback, useEffect, useState } from 'react';
+
+import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Loading } from '@/components/ui/Loading';
-import { EmptyState } from '@/components/ui/EmptyState';
-import {
-  RankRange,
-  Lane,
-  HeroStats,
-  SortKey,
-  SortOrder,
-  WinRates,
-} from '@/types';
-import { RankFilter } from './RankFilter';
-import { LaneFilter } from './LaneFilter';
-import { StatsTable } from './StatsTable';
-import { CalendarIcon } from '@heroicons/react/24/outline';
+import { useChampions } from '@/contexts/ChampionContext';
+import { useStats } from '@/contexts/StatsContext';
+import { SortKey, SortOrder } from '@/types/sort';
+import { HeroStats, Lane, RankRange, WinRates } from '@/types/stats';
 import { formatYYYYMMDDtoISO } from '@/utils/format';
+
+import { LaneFilter } from './LaneFilter';
+import { RankFilter } from './RankFilter';
+import { StatsTable } from './StatsTable';
 
 export function StatsMatrix() {
   const {

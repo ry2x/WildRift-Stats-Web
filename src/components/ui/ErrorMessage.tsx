@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useState } from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { useCallback, useState } from 'react';
+
 import { getErrorMessage, isRetryableError } from '@/utils/errorHandling';
 
 interface ErrorMessageProps {

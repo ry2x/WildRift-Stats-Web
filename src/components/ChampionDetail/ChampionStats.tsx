@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, memo } from 'react';
-import { HeroStats, RankRange, Lane } from '@/types';
-import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
-import { formatYYYYMMDDtoISO } from '@/utils/format';
 import { CalendarIcon } from '@heroicons/react/24/outline';
+import { memo, useState } from 'react';
+
+import { laneDisplayNames, rankDisplayNames } from '@/constants/game';
+import { HeroStats, Lane, RankRange } from '@/types/stats';
+import { formatYYYYMMDDtoISO } from '@/utils/format';
 
 interface ChampionStatsProps {
   stats: Record<RankRange, Record<Lane, HeroStats>>;

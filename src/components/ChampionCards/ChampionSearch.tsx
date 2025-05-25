@@ -1,9 +1,10 @@
 'use client';
 
-import { useChampions } from '@/contexts/ChampionContext';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import debounce from 'lodash/debounce';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import debounce from 'lodash/debounce';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { useChampions } from '@/contexts/ChampionContext';
 
 export function ChampionSearch() {
   const { searchTerm, setSearchTerm } = useChampions();

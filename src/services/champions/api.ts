@@ -3,17 +3,18 @@
  * Provides clean interface for champion data operations
  */
 
-import { createApiClient, type ApiClient } from '../api/client';
-import { withErrorHandling } from '../api/error';
-import { transformChampionData, validateChampionData } from './utils';
 import type {
   Champion,
-  Champions,
   ChampionFetchOptions,
+  Champions,
   ChampionServiceConfig,
-  RoleKey,
   LaneKey,
-} from './types';
+  RoleKey,
+} from '@/types/champion';
+
+import { type ApiClient, createApiClient } from '../api/client';
+import { withErrorHandling } from '../api/error';
+import { transformChampionData, validateChampionData } from './utils';
 
 // Default configuration
 const DEFAULT_CONFIG: ChampionServiceConfig = {

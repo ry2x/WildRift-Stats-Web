@@ -1,7 +1,8 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { RoleKey, LaneKey } from '@/types';
+import { createContext, ReactNode, useContext, useState } from 'react';
+
+import { LaneKey, RoleKey } from '@/types/champion';
 
 interface FilterContextType {
   selectedRoles: Set<RoleKey>;

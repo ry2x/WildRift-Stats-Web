@@ -1,11 +1,7 @@
 /**
- * Stats-specific type definitions for the services layer
+ * Stats service type definitions
  */
-
-import type { WinRates, HeroStats, RankRange, Lane } from '@/types/';
-
-// Re-export types for convenience
-export type { WinRates, HeroStats, RankRange, Lane };
+import type { WinRates } from './stats';
 
 // Additional service-specific types
 export interface StatsFetchOptions {

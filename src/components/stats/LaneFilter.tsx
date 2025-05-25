@@ -1,7 +1,8 @@
+import { ChevronUpIcon, MapIcon } from '@heroicons/react/24/outline';
 import { FC } from 'react';
-import { Lane } from '@/types';
+
 import { laneDisplayNames } from '@/constants/game';
-import { MapIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { Lane } from '@/types/stats';
 
 interface LaneFilterProps {
   selectedLane: Lane;

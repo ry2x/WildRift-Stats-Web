@@ -3,19 +3,15 @@
  * Provides a clean interface for React components to access champion data
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { getChampions } from '../services/champions/api';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { getChampions } from '@/services/champions/api';
 import {
-  filterChampionsByRole,
   filterChampionsByLane,
+  filterChampionsByRole,
   sortChampions as sortChampionsUtil,
-} from '../services/champions/utils';
-import type {
-  Champions,
-  Champion,
-  RoleKey,
-  LaneKey,
-} from '../services/champions/types';
+} from '@/services/champions/utils';
+import type { Champion, Champions, LaneKey, RoleKey } from '@/types/champion';
 
 export interface UseChampionDataOptions {
   autoFetch?: boolean;

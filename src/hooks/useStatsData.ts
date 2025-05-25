@@ -3,20 +3,16 @@
  * Provides a clean interface for React components to access stats data
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import {
-  getStats,
+  getAverageWinRate as getAverageWinRateService,
   getChampionStats as getChampionStatsService,
   getChampionTierList as getTierListService,
+  getStats,
   getStatsByRankAndLane as getStatsByRankAndLaneService,
-  getAverageWinRate as getAverageWinRateService,
-} from '../services/stats/api';
-import type {
-  WinRates,
-  HeroStats,
-  RankRange,
-  Lane,
-} from '../services/stats/types';
+} from '@/services/stats/api';
+import type { HeroStats, Lane, RankRange, WinRates } from '@/types/stats';
 
 export interface UseStatsDataOptions {
   autoFetch?: boolean;

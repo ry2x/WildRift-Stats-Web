@@ -1,7 +1,7 @@
 'use client';
 
-import Title from '@/components/home/Title';
 import Selection from '@/components/home/Selection';
+import Title from '@/components/home/Title';
 
 export default function Home() {
   return (

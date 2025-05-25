@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+
 import { ChampionDetailContainer } from '@/components/ChampionDetail';
 import { Loading } from '@/components/ui/Loading';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';

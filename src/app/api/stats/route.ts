@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getStats } from '@/services/stats/api';
+
 import {
   handleApiError,
   isApiError,
   isNetworkError,
 } from '@/services/api/error';
+import { getStats } from '@/services/stats/api';
 
 /**
  * Calculate seconds until next 10:00 AM

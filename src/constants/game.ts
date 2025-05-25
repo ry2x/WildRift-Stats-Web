@@ -1,5 +1,6 @@
 import { SortKey } from '@/contexts/SortContext';
-import { Lane, LaneKey, RankRange, RoleKey } from '@/types';
+import { LaneKey, RoleKey } from '@/types/champion';
+import { Lane, RankRange } from '@/types/stats';
 
 export const roleLabels: Record<RoleKey, string> = {
   fighter: 'ファイター',

@@ -4,6 +4,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tseslintParser from '@typescript-eslint/parser';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -63,6 +64,7 @@ const config = [
     },
     plugins: {
       '@typescript-eslint': tseslint,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...tseslint.configs['recommended'].rules,
@@ -73,10 +75,12 @@ const config = [
         { argsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   ...compat.config({
-    extends: ['next/core-web-vitals'],
+    extends: ['next/core-web-vitals', 'plugin:redos/recommended'],
   }),
   eslintConfigPrettier,
 ];

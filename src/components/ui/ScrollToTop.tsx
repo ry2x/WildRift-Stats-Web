@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 
 export function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);

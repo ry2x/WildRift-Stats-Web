@@ -1,4 +1,4 @@
-import { SortKey } from '@/types';
+import { SortKey } from '@/types/sort';
 
 export const sortOptions: { key: SortKey; label: string }[] = [
   { key: 'win_rate', label: '勝率' },

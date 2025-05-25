@@ -1,11 +1,12 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
-import { Champion, Champions } from '@/types';
-import { toKatakana } from '@/utils/convertHiragana';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+
 import { useFilters } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
 import { useChampionData } from '@/hooks/useChampionData';
+import { Champion, Champions } from '@/types/champion';
+import { toKatakana } from '@/utils/convertHiragana';
 
 export interface ChampionContextType {
   champions: Champions;
