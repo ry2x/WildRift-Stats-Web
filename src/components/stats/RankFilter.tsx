@@ -5,7 +5,7 @@ import { GlobeAltIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 interface RankFilterProps {
   currentRank: RankRange;
-  onChange: (rank: RankRange) => void;
+  onChange: (rank: RankRange | 'all') => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
@@ -47,10 +47,14 @@ export const RankFilter: FC<RankFilterProps> = ({
         className={`mt-4 transition-all duration-200 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div className="flex flex-wrap gap-2">
+          {' '}
           {Object.entries(rankDisplayNames).map(([rank, name]) => (
             <button
               key={rank}
-              onClick={() => onChange(rank as RankRange)}
+              onClick={() => {
+                console.log('RankFilter: onClick rank:', rank);
+                onChange(rank as RankRange);
+              }}
               className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
                 currentRank === rank
                   ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
