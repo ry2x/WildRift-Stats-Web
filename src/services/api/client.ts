@@ -61,7 +61,6 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
           return cachedData;
         }
       }
-      console.log(`Fetching data from API: ${url}`);
       // Fetch data from API
       const response = await fetch(url);
       if (!response.ok) {
