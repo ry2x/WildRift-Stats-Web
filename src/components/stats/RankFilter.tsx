@@ -52,7 +52,6 @@ export const RankFilter: FC<RankFilterProps> = ({
             <button
               key={rank}
               onClick={() => {
-                console.log('RankFilter: onClick rank:', rank);
                 onChange(rank as RankRange);
               }}
               className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
