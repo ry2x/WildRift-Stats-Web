@@ -1,4 +1,4 @@
-name: Build and Lint
+name: CI
 
 on:
   workflow_dispatch:
@@ -6,32 +6,34 @@ on:
   push:
 
 jobs:
-  build-lint:
-    name: Build and Lint
-
-    runs-on: ubuntu-22.04
+  build-and-test:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the source
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          show-progress: false
-          submodules: recursive
+      - uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        uses: pnpm/action-setup@v4
         with:
-          standalone: false
+          version: 10.10.0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: pnpm
+          node-version: 22
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
-      - run: pnpm build
+      - name: Lint check
+        run: pnpm lint
 
-      - run: pnpm lint
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
