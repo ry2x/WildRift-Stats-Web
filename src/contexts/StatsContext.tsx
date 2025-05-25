@@ -32,13 +32,28 @@ export const StatsProvider: React.FC<StatsProviderProps> = ({
   const statsData = useStatsData({
     initialRank: initialRank === 'all' ? '0' : initialRank,
     autoFetch: true,
-  }); // Create context value with proper interface
+  }); // Create context value with proper interface  // Create a reference to hold the current rank
+  // This is necessary because the initialRank from props
+  // doesn't update when updateRank is called
+  const [rankState, setRankState] = React.useState<RankRange | 'all'>(
+    initialRank
+  );
+  // Override the updateRank function to also update our local state
+  const updateRankWithState = React.useCallback(
+    (rank: RankRange | 'all') => {
+      console.log('StatsContext - updateRankWithState called with rank:', rank);
+      setRankState(rank); // Update our context state
+      statsData.updateRank(rank); // Update the hook state
+    },
+    [statsData]
+  );
+
   const contextValue: StatsContextType = {
     stats: statsData.stats, // Keep original structure
     isLoading: statsData.isLoading,
     error: statsData.error?.message || null,
-    currentRank: initialRank,
-    updateRank: statsData.updateRank,
+    currentRank: rankState, // Use our state variable instead of initialRank
+    updateRank: updateRankWithState,
     refreshStats: statsData.refreshStats,
     retryFetch: statsData.refreshStats, // Use refreshStats as retryFetch
   };

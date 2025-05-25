@@ -95,9 +95,9 @@ export function useStatsData(
   const setLane = useCallback((lane: Lane | null) => {
     setCurrentLane(lane);
   }, []);
-
   // Context compatibility methods
   const updateRank = useCallback((rank: RankRange | 'all') => {
+    console.log('useStatsData - updateRank called with rank:', rank);
     setCurrentRank(rank === 'all' ? '0' : rank);
   }, []);
 
