@@ -152,11 +152,12 @@ export function useChampionData(
     setSortKey('name');
     setSortOrder('asc');
   }, []);
-
   // Lookup functions
   const getChampionById = useCallback(
     (id: string): Champion | undefined => {
-      return allChampions.find(champion => champion.id === id);
+      return allChampions.find(
+        champion => champion.id.toLowerCase() === id.toLowerCase()
+      );
     },
     [allChampions]
   );

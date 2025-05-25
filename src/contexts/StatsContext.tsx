@@ -1,22 +1,22 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
+import { RankRange, WinRates } from '@/types';
 import { useStatsData } from '@/hooks/useStatsData';
-import type { RankRange, WinRates } from '@/types/services';
 
 // Context type definition
 interface StatsContextType {
   stats: WinRates | null;
-  isLoading: boolean;
-  error: string | null;
+  loading: boolean;
+  error: Error | null;
   currentRank: RankRange | 'all';
-  updateRank: (rank: RankRange | 'all') => void;
+  setCurrentRank: (rank: RankRange | 'all') => void;
   refreshStats: () => Promise<void>;
   retryFetch: () => Promise<void>;
 }
 
 // Create context
-const StatsContext = createContext<StatsContextType | undefined>(undefined);
+const StatsContext = createContext<StatsContextType | null>(null);
 
 // Provider component props
 interface StatsProviderProps {
@@ -25,53 +25,55 @@ interface StatsProviderProps {
 }
 
 // Provider component
-export const StatsProvider: React.FC<StatsProviderProps> = ({
+export function StatsProvider({
   children,
   initialRank = 'all',
-}) => {
-  const statsData = useStatsData({
-    initialRank: initialRank === 'all' ? '0' : initialRank,
-    autoFetch: true,
-  }); // Create context value with proper interface  // Create a reference to hold the current rank
-  // This is necessary because the initialRank from props
-  // doesn't update when updateRank is called
-  const [rankState, setRankState] = React.useState<RankRange | 'all'>(
-    initialRank
-  );
-  // Override the updateRank function to also update our local state
-  const updateRankWithState = React.useCallback(
-    (rank: RankRange | 'all') => {
-      console.log('StatsContext - updateRankWithState called with rank:', rank);
-      setRankState(rank); // Update our context state
-      statsData.updateRank(rank); // Update the hook state
-    },
-    [statsData]
-  );
+}: StatsProviderProps) {
+  // Track current rank state at the context level
+  const [rankState, setRankState] = useState<RankRange | 'all'>(initialRank);
 
-  const contextValue: StatsContextType = {
-    stats: statsData.stats, // Keep original structure
-    isLoading: statsData.isLoading,
-    error: statsData.error?.message || null,
-    currentRank: rankState, // Use our state variable instead of initialRank
-    updateRank: updateRankWithState,
-    refreshStats: statsData.refreshStats,
-    retryFetch: statsData.refreshStats, // Use refreshStats as retryFetch
-  };
+  // Use the custom hook for data management
+  const { stats, loading, error, setRank, refetch } = useStatsData({
+    initialRank: rankState === 'all' ? '0' : rankState,
+    autoFetch: true,
+  });
+
+  // Handle rank updates while maintaining local state
+  const updateRank = useMemo(() => {
+    return (rank: RankRange | 'all') => {
+      setRankState(rank);
+      setRank(rank === 'all' ? '0' : rank);
+    };
+  }, [setRank]);
+
+  // Context value
+  const contextValue = useMemo(
+    () => ({
+      stats,
+      loading,
+      error,
+      currentRank: rankState, // Use our state variable for UI display
+      setCurrentRank: updateRank,
+      refreshStats: () => refetch(true),
+      retryFetch: () => refetch(false),
+    }),
+    [stats, loading, error, rankState, updateRank, refetch]
+  );
 
   return (
     <StatsContext.Provider value={contextValue}>
       {children}
     </StatsContext.Provider>
   );
-};
+}
 
 // Custom hook to use the context
-export const useStats = (): StatsContextType => {
+export function useStats() {
   const context = useContext(StatsContext);
-  if (!context) {
+  if (context === null) {
     throw new Error('useStats must be used within a StatsProvider');
   }
   return context;
-};
+}
 
 export default StatsContext;
