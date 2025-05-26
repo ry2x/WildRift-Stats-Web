@@ -59,7 +59,7 @@ export function ChampionFilterAndSort({
   };
 
   return (
-    <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-6">
+    <div className="base-card p-4 shadow-md space-y-6">
       {/* Role Filter Section */}
       <div>
         <button

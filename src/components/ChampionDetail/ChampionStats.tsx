@@ -40,7 +40,10 @@ export const ChampionStats = memo(function ChampionStats({
       </h2>
 
       {/* Rank Filter Card */}
-      <div className="mt-4 rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-4 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 shadow-lg shadow-blue-500/5">
+      <div
+        className="mt-4 rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/80 
+        p-4 backdrop-blur-sm border border-white/20 dark:border-blue-900/20 transition-all duration-300 shadow-lg shadow-blue-500/5"
+      >
         <div className="flex gap-2 overflow-x-auto pb-2">
           {(Object.keys(rankDisplayNames) as RankRange[]).map(rank => (
             <button
@@ -61,7 +64,10 @@ export const ChampionStats = memo(function ChampionStats({
       {/* Stats Grid */}
       <div className="mt-6">
         {lanes.length === 0 ? (
-          <div className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
+          <div
+            className="rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/80 
+            p-6 backdrop-blur-sm border border-white/20 dark:border-blue-900/20 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5"
+          >
             <p className="text-slate-700 dark:text-slate-300">
               このランクでの統計情報はありません。
             </p>
@@ -75,7 +81,8 @@ export const ChampionStats = memo(function ChampionStats({
               return (
                 <div
                   key={lane}
-                  className="group rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-slate-800/90 dark:to-blue-900/80 p-6 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5"
+                  className="group rounded-lg bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/80 
+                  p-6 backdrop-blur-sm border border-white/20 dark:border-blue-900/20 transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5"
                 >
                   <h3 className="text-lg font-medium bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent group-hover:to-blue-600 dark:group-hover:to-blue-300 transition-all flex items-center justify-between">
                     <span>{laneDisplayNames[lane]}レーン</span>

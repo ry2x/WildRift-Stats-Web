@@ -132,7 +132,7 @@ export function StatsMatrix() {
     <div className="parent">
       <div className="space-y-8">
         {/* Combined Filter Section */}
-        <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
+        <div className="base-card p-4 shadow-md space-y-2">
           {/* Rank Filter */}
           <RankFilter
             currentRank={actualRank}
@@ -148,12 +148,12 @@ export function StatsMatrix() {
             setIsOpen={setIsLaneOpen}
             lanes={lanes}
           />
-        </div>{' '}
+        </div>
         {/* Last Updated Display */}
         <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
           <CalendarIcon className="h-4 w-4 mr-1" />
           <span>
-            最終更新日:{' '}
+            最終更新日:
             {formatYYYYMMDDtoISO(stats.data[actualRank][1][0].dtstatdate)}
           </span>
         </div>

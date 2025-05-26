@@ -14,7 +14,7 @@ export const ChampionCard = ({ champion }: ChampionCardProps) => {
   return (
     <Link
       href={`/champions/${champion.id}`}
-      className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 hover:shadow-xl transition-all duration-200 hover:scale-105 backdrop-blur-sm border border-white/20 dark:border-blue-900/20 rounded-lg overflow-hidden shadow-md group"
+      className="base-card hover:shadow-xl transition-all duration-200 hover:scale-105 overflow-hidden shadow-md group"
     >
       {/* Champion Image with Loading State */}
       <div className="relative aspect-square w-full overflow-hidden bg-linear-to-br from-blue-100/50 to-purple-100/50 dark:from-blue-900/50 dark:to-purple-900/50">
