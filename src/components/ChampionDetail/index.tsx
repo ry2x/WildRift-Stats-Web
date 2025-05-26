@@ -15,69 +15,17 @@ import { HeroStats, Lane, RankRange } from '@/types/stats';
 // Import original components
 import { ChampionImage } from './ChampionImage';
 
-// Dynamic imports for sub-components
-const ChampionBasicInfo = dynamic(
-  () => import('./ChampionBasicInfo').then(mod => mod.ChampionBasicInfo),
-  {
-    loading: () => <Loading message="基本情報を読み込み中..." />,
-    ssr: true,
-  }
-);
-
-const ChampionStats = dynamic(
-  () => import('./ChampionStats').then(mod => mod.ChampionStats),
-  {
-    loading: () => <Loading message="統計情報を読み込み中..." />,
-    ssr: true,
-  }
-);
-
-// =====================================
-// Main component exported to the app
-// =====================================
-export function ChampionDetailContainer({
-  championId,
-}: {
-  championId: string;
-}) {
-  const {
-    getChampionById,
-    loading: championsLoading,
-    error: championsError,
-  } = useChampions();
-  const { stats, loading: statsLoading, error: statsError } = useStats();
-  const [isReady, setIsReady] = useState(false);
-
-  // Find champion by ID
-  const champion = getChampionById(championId);
-
-  useEffect(() => {
-    // Wait until both champion data and stats are loaded
-    if (!championsLoading && !statsLoading) {
-      setIsReady(true);
-    }
-  }, [championsLoading, statsLoading]);
-
-  // Show error if any
-  if (championsError) {
-    return <ErrorMessage message="チャンピオン情報の取得に失敗しました" />;
-  }
-
-  if (statsError) {
-    return <ErrorMessage message="統計情報の取得に失敗しました" />;
-  }
-
-  // Show loading state
-  if (championsLoading || statsLoading || !isReady) {
-    return <Loading message="データを読み込み中..." />;
-  }
-
-  // Handle not found champion
-  if (!champion) {
-    notFound();
-  }
-
-  // Prepare stats data for champion
+/**
+ * Prepares champion statistics data from raw stats for all ranks and lanes
+ *
+ * @param stats - Raw stats data from context
+ * @param champion - Champion object for which to extract stats
+ * @returns Formatted stats data by rank and lane
+ */
+function prepareChampionStats(
+  stats: ReturnType<typeof useStats>['stats'],
+  champion: Champion
+): Record<RankRange, Record<Lane, HeroStats>> {
   const rankStats: Record<RankRange, Record<Lane, HeroStats>> = {} as Record<
     RankRange,
     Record<Lane, HeroStats>
@@ -107,48 +55,83 @@ export function ChampionDetailContainer({
     rankStats[rank] = laneStats;
   });
 
-  return <ChampionDetailPage champion={champion} rankStats={rankStats} />;
+  return rankStats;
 }
 
 // =====================================
-// Detail Page Component
+// Main component exported to the app
 // =====================================
-interface ChampionDetailPageProps {
-  champion: Champion;
-  rankStats: Record<RankRange, Record<Lane, HeroStats>>;
-}
+export function ChampionDetailContainer({
+  championId,
+}: {
+  championId: string;
+}) {
+  const {
+    getChampionById,
+    loading: championLoading,
+    error: getChampionError,
+  } = useChampions();
+  const {
+    stats,
+    loading: statsLoading,
+    error: statsError,
+    retryFetch: retryStats,
+  } = useStats();
+  const [isReady, setIsReady] = useState(false);
 
-export function ChampionDetailPage({
-  champion,
-  rankStats,
-}: ChampionDetailPageProps) {
-  return (
-    <main className="flex min-h-screen flex-col">
-      <Suspense
-        fallback={<Loading message="チャンピオン情報を読み込み中..." />}
-      >
-        <ChampionDetailsMain champion={champion} stats={rankStats} />
-      </Suspense>
-    </main>
-  );
-}
+  // Find champion by ID
+  const champion = getChampionById(championId);
 
-// =====================================
-// Details Main Component
-// =====================================
-interface ChampionDetailsMainProps {
-  champion: Champion;
-  stats: Record<RankRange, Record<Lane, HeroStats>>;
-}
+  useEffect(() => {
+    // Wait until both champion data and stats are loaded
+    if (!championLoading && !statsLoading) {
+      setIsReady(true);
+    }
+  }, [championLoading, statsLoading]);
 
-export function ChampionDetailsMain({
-  champion,
-  stats,
-}: ChampionDetailsMainProps) {
-  const { error: statsError, retryFetch: retryStats } = useStats();
+  // Show error if any
+  if (getChampionError) {
+    return <ErrorMessage message="チャンピオン情報の取得に失敗しました" />;
+  }
+
+  if (statsError) {
+    return <ErrorMessage message="統計情報の取得に失敗しました" />;
+  }
+
+  // Show loading state
+  if (championLoading || statsLoading || !isReady) {
+    return <Loading message="データを読み込み中..." />;
+  }
+
+  // Handle not found champion
+  if (!champion) {
+    notFound();
+  }
+
+  // Get champion stats data
+  const rankStats = prepareChampionStats(stats, champion);
+
+  // Prepare URLs for images
   const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg`;
   const loadingUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`;
   const fallbackUrl = `https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${champion.id}.png`;
+
+  // Dynamic imports for sub-components
+  const ChampionBasicInfo = dynamic(
+    () => import('./ChampionBasicInfo').then(mod => mod.ChampionBasicInfo),
+    {
+      loading: () => <Loading message="基本情報を読み込み中..." />,
+      ssr: true,
+    }
+  );
+
+  const ChampionStats = dynamic(
+    () => import('./ChampionStats').then(mod => mod.ChampionStats),
+    {
+      loading: () => <Loading message="統計情報を読み込み中..." />,
+      ssr: true,
+    }
+  );
 
   return (
     <div className="relative w-full">
@@ -253,7 +236,7 @@ export function ChampionDetailsMain({
             {statsError ? (
               <ErrorMessage error={statsError} onRetry={retryStats} />
             ) : (
-              <ChampionStats stats={stats} />
+              <ChampionStats stats={rankStats} />
             )}
           </Suspense>
 
@@ -266,5 +249,3 @@ export function ChampionDetailsMain({
     </div>
   );
 }
-
-// End of file
