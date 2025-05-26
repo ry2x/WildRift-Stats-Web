@@ -14,9 +14,6 @@ importers:
       '@icons-pack/react-simple-icons':
         specifier: ^12.7.0
         version: 12.7.0(react@19.1.0)
-      '@types/lodash':
-        specifier: ^4.17.16
-        version: 4.17.16
       axios:
         specifier: ^1.9.0
         version: 1.9.0
@@ -54,6 +51,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
+      '@types/lodash':
+        specifier: ^4.17.16
+        version: 4.17.16
       '@types/node':
         specifier: ^20
         version: 20.17.32
