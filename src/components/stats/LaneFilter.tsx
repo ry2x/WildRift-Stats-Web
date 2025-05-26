@@ -29,10 +29,10 @@ export const LaneFilter: FC<LaneFilterProps> = ({
   lanes,
 }) => {
   return (
-    <div className="border-t border-gray-200/20 dark:border-gray-700/20 pt-6">
+    <div className="pt-6">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left"
+        className="w-full flex justify-between items-center text-left px-4"
       >
         <div className="flex items-center gap-2">
           <MapIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -53,7 +53,7 @@ export const LaneFilter: FC<LaneFilterProps> = ({
         className={`mt-4 transition-all duration-200 overflow-hidden
         ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 px-4">
           {lanes.map(lane => (
             <button
               key={lane}

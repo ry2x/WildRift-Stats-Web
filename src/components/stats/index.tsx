@@ -132,7 +132,7 @@ export function StatsMatrix() {
     <div className="parent">
       <div className="space-y-8">
         {/* Combined Filter Section */}
-        <div className="base-card p-4 shadow-md space-y-2">
+        <div className="base-card py-4 shadow-md space-y-2">
           {/* Rank Filter */}
           <RankFilter
             currentRank={actualRank}

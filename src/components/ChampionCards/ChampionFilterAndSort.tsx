@@ -59,12 +59,12 @@ export function ChampionFilterAndSort({
   };
 
   return (
-    <div className="base-card p-4 shadow-md space-y-6">
+    <div className="base-card py-4 shadow-md space-y-6">
       {/* Role Filter Section */}
       <div>
         <button
           onClick={() => setIsRolesOpen(!isRolesOpen)}
-          className="w-full flex justify-between items-center text-left"
+          className="w-full flex justify-between items-center text-left px-4"
         >
           <div className="flex items-center gap-2">
             <UserGroupIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -87,7 +87,7 @@ export function ChampionFilterAndSort({
           className={`mt-4 transition-all duration-200 overflow-hidden
           ${isRolesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 px-4">
             {roles.map(role => (
               <button
                 key={role}
@@ -113,7 +113,7 @@ export function ChampionFilterAndSort({
       <div>
         <button
           onClick={() => setIsLanesOpen(!isLanesOpen)}
-          className="w-full flex justify-between items-center text-left"
+          className="w-full flex justify-between items-center text-left px-4"
         >
           <div className="flex items-center gap-2">
             <MapIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -136,7 +136,7 @@ export function ChampionFilterAndSort({
           className={`mt-4 transition-all duration-200 overflow-hidden
           ${isLanesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 px-4">
             {lanes.map(lane => (
               <button
                 key={lane}
@@ -162,7 +162,7 @@ export function ChampionFilterAndSort({
       <div>
         <button
           onClick={() => setIsSortOpen(!isSortOpen)}
-          className="w-full flex justify-between items-center text-left"
+          className="w-full flex justify-between items-center text-left px-4"
         >
           <div className="flex items-center gap-2">
             <AdjustmentsHorizontalIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -183,7 +183,7 @@ export function ChampionFilterAndSort({
           className={`mt-4 transition-all duration-200 overflow-hidden
           ${isSortOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 px-4">
             {sortOptions.map(option => (
               <button
                 key={option.value}
