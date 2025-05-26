@@ -34,7 +34,7 @@ export function ChampionSearch() {
   );
 
   return (
-    <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20">
+    <div className="base-card p-4 shadow-md">
       <div className="flex items-center gap-2 mb-4">
         <MagnifyingGlassIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
         <h3 className="text-lg font-semibold bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-200 dark:to-purple-200 bg-clip-text text-transparent">

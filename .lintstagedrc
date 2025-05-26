@@ -1,0 +1,4 @@
+{
+  "*.{ts,tsx}": "next lint --dir src",
+  "*.{ts,tsx,json,md,css}": "prettier --write \"src/**/*.{ts,tsx,css}\""
+}

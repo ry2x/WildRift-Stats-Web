@@ -129,41 +129,43 @@ export function StatsMatrix() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Combined Filter Section */}
-      <div className="bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 p-4 rounded-lg shadow-md backdrop-blur-sm border border-white/20 dark:border-blue-900/20 space-y-2">
-        {/* Rank Filter */}
-        <RankFilter
-          currentRank={actualRank}
-          onChange={handleRankClick}
-          isOpen={isRankOpen}
-          setIsOpen={setIsRankOpen}
+    <div className="parent">
+      <div className="space-y-8">
+        {/* Combined Filter Section */}
+        <div className="base-card p-4 shadow-md space-y-2">
+          {/* Rank Filter */}
+          <RankFilter
+            currentRank={actualRank}
+            onChange={handleRankClick}
+            isOpen={isRankOpen}
+            setIsOpen={setIsRankOpen}
+          />
+          {/* Lane Filter */}
+          <LaneFilter
+            selectedLane={selectedLane}
+            onChange={setSelectedLane}
+            isOpen={isLaneOpen}
+            setIsOpen={setIsLaneOpen}
+            lanes={lanes}
+          />
+        </div>
+        {/* Last Updated Display */}
+        <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
+          <CalendarIcon className="h-4 w-4 mr-1" />
+          <span>
+            最終更新日:
+            {formatYYYYMMDDtoISO(stats.data[actualRank][1][0].dtstatdate)}
+          </span>
+        </div>
+        {/* Stats Table */}
+        <StatsTable
+          sortedChampions={sortedChampions}
+          championMap={championMap}
+          sortKey={sortKey}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
         />
-        {/* Lane Filter */}
-        <LaneFilter
-          selectedLane={selectedLane}
-          onChange={setSelectedLane}
-          isOpen={isLaneOpen}
-          setIsOpen={setIsLaneOpen}
-          lanes={lanes}
-        />
-      </div>{' '}
-      {/* Last Updated Display */}
-      <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
-        <CalendarIcon className="h-4 w-4 mr-1" />
-        <span>
-          最終更新日:{' '}
-          {formatYYYYMMDDtoISO(stats.data[actualRank][1][0].dtstatdate)}
-        </span>
       </div>
-      {/* Stats Table */}
-      <StatsTable
-        sortedChampions={sortedChampions}
-        championMap={championMap}
-        sortKey={sortKey}
-        sortOrder={sortOrder}
-        onSortChange={handleSortChange}
-      />
     </div>
   );
 }

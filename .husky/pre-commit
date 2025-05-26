@@ -1,0 +1,4 @@
+
+eval "$(fnm env --use-on-cd)"
+
+pnpm lint-staged

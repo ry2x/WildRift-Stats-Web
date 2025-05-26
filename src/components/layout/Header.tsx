@@ -20,7 +20,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-linear-to-r from-white via-blue-50 to-white dark:from-gray-900 dark:via-blue-950 dark:to-gray-900 border-b border-gray-200/50 dark:border-gray-700/50 transition-colors duration-200 backdrop-blur-sm">
+    <header className="bg-linear-to-r from-white via-violet-200/40 to-white dark:from-gray-900 dark:via-blue-950 dark:to-gray-900 border-b border-gray-200/50 dark:border-gray-700/50 transition-colors duration-200 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-2">

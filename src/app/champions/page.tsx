@@ -6,7 +6,7 @@ import { ScrollToTop } from '@/components/ui/ScrollToTop';
 
 export default function ChampionsPage() {
   return (
-    <main className="min-h-screen bg-linear-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950">
+    <main>
       <Suspense
         fallback={<Loading message="チャンピオン情報を読み込み中..." />}
       >

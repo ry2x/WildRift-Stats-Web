@@ -59,9 +59,7 @@ export const LaneFilter: FC<LaneFilterProps> = ({
               key={lane}
               onClick={() => onChange(lane)}
               className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                selectedLane === lane
-                  ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                  : 'bg-linear-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
+                selectedLane === lane ? 'base-btn-on' : 'base-btn-off'
               } backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20`}
             >
               {laneDisplayNames[lane]}
