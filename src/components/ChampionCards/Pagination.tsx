@@ -30,7 +30,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          className="pagebtns"
+          className="page-btns"
           aria-label="最初のページへ"
         >
           «
@@ -38,7 +38,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="pagebtns"
+          className="page-btns"
           aria-label="前のページへ"
         >
           ←
@@ -49,7 +49,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="pagebtns"
+          className="page-btns"
           aria-label="次のページへ"
         >
           →
@@ -57,7 +57,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
-          className="pagebtns"
+          className="page-btns"
           aria-label="最後のページへ"
         >
           »
