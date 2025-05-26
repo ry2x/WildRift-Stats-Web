@@ -4,7 +4,7 @@
 
 @layer base {
   main {
-    @apply min-h-screen bg-linear-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950;
+    @apply min-h-screen bg-linear-to-br from-violet-50/90 to-violet-300/60 dark:from-gray-900 dark:to-blue-950;
   }
 }
 
@@ -23,7 +23,7 @@
 
   /* card style */
   .base-card {
-    @apply bg-linear-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/90 border
+    @apply bg-linear-to-br from-white/90 to-violet-50/90 dark:from-gray-800/90 dark:to-blue-900/90 border
     border-white/20 dark:border-blue-900/20 rounded-lg backdrop-blur-sm transition-all;
   }
 }

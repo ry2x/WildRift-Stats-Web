@@ -170,12 +170,12 @@ export function ChampionDetailContainer({
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-50/10 dark:via-gray-900/30 to-slate-100/60 dark:to-gray-900/70" />
 
           {/* Bottom area layer */}
-          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-linear-to-t from-white/80 dark:from-gray-900/90 to-transparent" />
+          <div className="absolute bottom-0 h-1/3 inset-x-0 bg-linear-to-t from-violet-50/60 dark:from-gray-900/90 to-transparent" />
         </div>
 
         {/* Text protection layer with backdrop */}
         <div className="absolute bottom-0 h-48 inset-x-0">
-          <div className="absolute inset-0 bg-linear-to-t from-white/60 dark:from-gray-900/80 via-white/30 dark:via-gray-900/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-violet-50/80 dark:from-gray-900/80 via-violet-50/30 dark:via-gray-900/50 to-transparent" />
         </div>
 
         {/* Champion info section with enhanced layout */}
@@ -225,9 +225,9 @@ export function ChampionDetailContainer({
       </div>
 
       {/* Content Section with adjusted position */}
-      <div className="relative bg-linear-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 -mt-10">
+      <div className="relative bg-linear-to-b from-violet-50 to-violet-300/60 dark:from-gray-900 dark:to-blue-950 -mt-10">
         {/* Adjusted top gradient */}
-        <div className="absolute inset-x-0 -top-40 h-40 bg-linear-to-b from-transparent via-white/95 dark:via-gray-900/95 to-white dark:to-gray-900" />
+        <div className="absolute inset-x-0 -top-40 h-40 bg-linear-to-b from-transparent via-violet-50/95 dark:via-gray-900/95 to-violet-50/90 dark:to-gray-900" />
 
         {/* Content wrapper with minimal top padding */}
         <div className="relative max-w-7xl mx-auto px-4 pt-0 pb-6 space-y-12">
