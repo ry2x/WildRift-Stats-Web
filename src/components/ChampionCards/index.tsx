@@ -13,6 +13,7 @@ import { LaneKey, RoleKey } from '@/types/champion';
 import { ChampionCard } from './ChampionCard';
 import { ChampionFilterAndSort } from './ChampionFilterAndSort';
 import { ChampionSearch } from './ChampionSearch';
+import { Pagination } from './Pagination';
 
 export function ChampionGrid() {
   const { loading, error, filteredChampions, retryFetch } = useChampions();
@@ -124,7 +125,7 @@ export function ChampionGrid() {
   const allLanes: LaneKey[] = ['mid', 'jungle', 'top', 'support', 'ad'];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="parent">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Filter and Sort Section */}
         <div className="space-y-6">
@@ -150,55 +151,15 @@ export function ChampionGrid() {
               <ChampionCard key={champion.id} champion={champion} />
             ))}
           </div>
-
           {/* Enhanced Pagination Controls */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
-            {' '}
-            <div className="px-4 py-2 font-medium text-gray-700 dark:text-gray-200">
-              {paginationValues.totalChampions}体のチャンピオン中{' '}
-              {paginationValues.indexOfFirstItem + 1}-
-              {Math.min(
-                paginationValues.indexOfLastItem,
-                paginationValues.totalChampions
-              )}
-              体を表示
-            </div>
-            <div className="flex items-center gap-2">
-              {' '}
-              <button
-                onClick={() => handlePageChange(1)}
-                disabled={currentPageFromUrl === 1}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
-                aria-label="最初のページへ"
-              >
-                «
-              </button>{' '}
-              <button
-                onClick={() => handlePageChange(currentPageFromUrl - 1)}
-                disabled={currentPageFromUrl === 1}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
-                aria-label="前のページへ"
-              ></button>
-              <span className="px-4 py-2 rounded-md bg-linear-to-r from-blue-500 to-purple-500 text-white">
-                {paginationValues.validatedCurrentPage} /{' '}
-                {paginationValues.totalPages}
-              </span>{' '}
-              <button
-                onClick={() => handlePageChange(currentPageFromUrl + 1)}
-                disabled={currentPageFromUrl === paginationValues.totalPages}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
-                aria-label="次のページへ"
-              ></button>{' '}
-              <button
-                onClick={() => handlePageChange(paginationValues.totalPages)}
-                disabled={currentPageFromUrl === paginationValues.totalPages}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
-                aria-label="最後のページへ"
-              >
-                »
-              </button>
-            </div>
-          </div>
+          <Pagination
+            currentPage={paginationValues.validatedCurrentPage}
+            totalPages={paginationValues.totalPages}
+            onPageChange={handlePageChange}
+            totalItems={paginationValues.totalChampions}
+            indexOfFirstItem={paginationValues.indexOfFirstItem}
+            indexOfLastItem={paginationValues.indexOfLastItem}
+          />
         </div>
       </div>
     </div>
