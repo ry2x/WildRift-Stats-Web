@@ -26,4 +26,13 @@
     @apply bg-linear-to-br from-white/90 to-violet-50/90 dark:from-gray-800/90 dark:to-blue-900/90 border
     border-white/20 dark:border-blue-900/20 rounded-lg backdrop-blur-sm transition-all;
   }
+
+  /* button style */
+  .base-btn-off {
+    @apply hover:scale-x-105 bg-linear-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80
+    text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800;
+  }
+  .base-btn-on {
+    @apply hover:scale-x-105 bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20;
+  }
 }
