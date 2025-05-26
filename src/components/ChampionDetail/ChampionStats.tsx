@@ -50,9 +50,7 @@ export const ChampionStats = memo(function ChampionStats({
               key={rank}
               onClick={() => setSelectedRank(rank)}
               className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                selectedRank === rank
-                  ? 'bg-linear-to-r from-blue-500 to-blue-400 text-white shadow-lg shadow-blue-500/20'
-                  : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-600 hover:text-blue-600 dark:hover:text-white border border-slate-200/50 dark:border-white/10'
+                selectedRank === rank ? 'base-btn-off' : 'base-btn-on'
               }`}
             >
               {rankDisplayNames[rank]}

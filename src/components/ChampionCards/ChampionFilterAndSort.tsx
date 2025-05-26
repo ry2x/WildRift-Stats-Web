@@ -96,8 +96,8 @@ export function ChampionFilterAndSort({
                   px-3 py-2 rounded-md transition-all duration-200
                   ${
                     selectedRoles.includes(role)
-                      ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                      : 'bg-linear-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
+                      ? 'base-btn-on'
+                      : 'base-btn-off'
                   }
                   backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20
                 `}
@@ -145,8 +145,8 @@ export function ChampionFilterAndSort({
                   px-3 py-2 rounded-md transition-all duration-200
                   ${
                     selectedLanes.includes(lane)
-                      ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                      : 'bg-linear-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
+                      ? 'base-btn-on'
+                      : 'base-btn-off'
                   }
                   backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20
                 `}
@@ -198,11 +198,7 @@ export function ChampionFilterAndSort({
                 className={`
                   flex items-center gap-2 px-3 py-2 rounded-md 
                   transition-all duration-200 
-                  ${
-                    sortBy === option.value
-                      ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20'
-                      : 'bg-linear-to-r from-white/80 to-blue-50/80 dark:from-gray-700/80 dark:to-blue-900/80 text-gray-700 dark:text-gray-300 hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-600 dark:hover:to-blue-800'
-                  }
+                  ${sortBy === option.value ? 'base-btn-on' : 'base-btn-off'}
                   backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20
                 `}
               >
