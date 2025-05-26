@@ -178,9 +178,7 @@ export function ChampionGrid() {
                 disabled={currentPageFromUrl === 1}
                 className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
                 aria-label="前のページへ"
-              >
-                ‹
-              </button>
+              ></button>
               <span className="px-4 py-2 rounded-md bg-linear-to-r from-blue-500 to-purple-500 text-white">
                 {paginationValues.validatedCurrentPage} /{' '}
                 {paginationValues.totalPages}
@@ -190,9 +188,7 @@ export function ChampionGrid() {
                 disabled={currentPageFromUrl === paginationValues.totalPages}
                 className="px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700"
                 aria-label="次のページへ"
-              >
-                ›
-              </button>{' '}
+              ></button>{' '}
               <button
                 onClick={() => handlePageChange(paginationValues.totalPages)}
                 disabled={currentPageFromUrl === paginationValues.totalPages}
