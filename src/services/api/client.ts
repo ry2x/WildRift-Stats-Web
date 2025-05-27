@@ -70,7 +70,7 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
  */
 export function createCache<T>({
   key,
-  storage = 'memory',
+  storage = 'localStorage',
   getExpirationTime = getNextDailyUpdate,
 }: CacheOptions): Cache<T> {
   // Memory cache
