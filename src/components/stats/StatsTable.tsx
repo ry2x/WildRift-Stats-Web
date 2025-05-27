@@ -1,3 +1,5 @@
+'use client';
+
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FC } from 'react';

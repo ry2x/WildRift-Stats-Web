@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronUpIcon, MapIcon } from '@heroicons/react/24/outline';
 import { FC } from 'react';
 
