@@ -25,13 +25,14 @@ const nextConfig: NextConfig = {
       ? `http://${process.env.DEV_HOST || 'localhost'}:${process.env.DEV_PORT || '3000'}`
       : '',
   async rewrites() {
-    return [
+    // Use Promise.resolve to satisfy the async requirement
+    return Promise.resolve([
       {
         source: '/api/stats-proxy',
         destination:
           'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2',
       },
-    ];
+    ]);
   },
 };
 
