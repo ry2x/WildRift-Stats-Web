@@ -5,15 +5,13 @@ import { notFound } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { GeneralImage } from '@/components/ui/GeneralImage';
 import { Loading } from '@/components/ui/Loading';
 import { laneLabels, roleLabels } from '@/constants/game';
 import { useChampions } from '@/contexts/ChampionContext';
 import { useStats } from '@/contexts/StatsContext';
 import { Champion } from '@/types/champion';
 import { HeroStats, Lane, RankRange } from '@/types/stats';
-
-// Import original components
-import { ChampionImage } from './ChampionImage';
 
 /**
  * Prepares champion statistics data from raw stats for all ranks and lanes
@@ -139,7 +137,7 @@ export function ChampionDetailContainer({
       <div className="relative h-[70vh] w-full overflow-hidden">
         {/* Landscape splash art */}
         <div className="hidden landscape:block h-full w-full">
-          <ChampionImage
+          <GeneralImage
             src={splashUrl}
             alt={`${champion.name} splash art`}
             className="object-top object-cover transform scale-105 transition-transform duration-1000 hover:scale-110"
@@ -151,7 +149,7 @@ export function ChampionDetailContainer({
 
         {/* Portrait loading art */}
         <div className="block landscape:hidden h-full w-full">
-          <ChampionImage
+          <GeneralImage
             src={loadingUrl}
             alt={`${champion.name} portrait art`}
             className="object-top object-cover transform scale-105 transition-transform duration-1000 hover:scale-110"

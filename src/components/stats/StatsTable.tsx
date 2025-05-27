@@ -1,8 +1,8 @@
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FC } from 'react';
 
+import { GeneralImage } from '@/components/ui/GeneralImage';
 import { sortOptions } from '@/constants/stats';
 import { Champion } from '@/types/champion';
 import { SortKey, SortOrder } from '@/types/sort';
@@ -87,12 +87,12 @@ export const StatsTable: FC<StatsTableProps> = ({
                       href={`/champions/${championData.id.toLowerCase()}`}
                       className="relative shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 hover:scale-110 transition-transform duration-200"
                     >
-                      <Image
+                      <GeneralImage
                         src={`https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/${championData.id}.png`}
                         alt={championData.name}
-                        fill
                         sizes="32px"
                         className="object-cover"
+                        fallbackSrc=""
                       />
                     </Link>
                     <Link
