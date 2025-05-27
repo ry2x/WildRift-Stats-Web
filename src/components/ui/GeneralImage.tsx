@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-interface ChampionImageProps {
+interface GeneralImageProps {
   src: string;
   alt: string;
   fallbackSrc: string;
@@ -11,14 +11,14 @@ interface ChampionImageProps {
   sizes?: string;
 }
 
-export function ChampionImage({
+export function GeneralImage({
   src,
   alt,
   fallbackSrc,
   className,
   priority,
   sizes,
-}: ChampionImageProps) {
+}: GeneralImageProps) {
   return (
     <Image
       src={src}
