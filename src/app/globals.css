@@ -9,6 +9,24 @@
 }
 
 @layer components {
+  /* gradient animation for title */
+  .animate-gradient {
+    animation: gradient 3s linear infinite;
+  }
+
+  .title-gradient {
+    @apply bg-[linear-gradient(to_right,#2563eb,#9333ea,#2563eb)] bg-[length:200%_auto];
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
   /* div parent style */
   .parent {
     @apply container mx-auto px-4 py-8;
@@ -18,13 +36,17 @@
   .page-btns {
     @apply bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white
     dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700
-    shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg font-medium transition-all duration-200;
+      shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg font-medium transition-all duration-200;
   }
 
   /* card style */
   .base-card {
     @apply bg-linear-to-br from-white/90 to-violet-50/90 dark:from-gray-800/90 dark:to-blue-900/90 border
     border-white/20 dark:border-blue-900/20 rounded-lg backdrop-blur-sm transition-all;
+  }
+
+  .base-card-title-text {
+    @apply bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent;
   }
 
   /* button style */
@@ -34,5 +56,26 @@
   }
   .base-btn-on {
     @apply hover:scale-x-105 bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium shadow-md shadow-blue-500/20 dark:shadow-purple-500/20;
+  }
+
+  /* role badge style */
+  .role-badge {
+    @apply inline-block rounded bg-linear-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-800/90 dark:to-purple-800/90
+    text-blue-800 dark:text-blue-100 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20;
+  }
+
+  /* lane badge style */
+  .lane-badge {
+    @apply inline-block rounded bg-linear-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-800/90 dark:to-pink-800/90
+    text-purple-800 dark:text-purple-100 backdrop-blur-sm border border-purple-200/20 dark:border-purple-400/20;
+  }
+
+  /* stats card small title style */
+  .stats-card-title {
+    @apply flex justify-between items-center p-2 rounded-md transition-all hover:bg-slate-50 dark:hover:bg-white/5;
+  }
+
+  .stats-card-title-text {
+    @apply text-slate-600 dark:text-slate-300 group-hover/stat:text-blue-600 dark:group-hover/stat:text-white transition-colors;
   }
 }

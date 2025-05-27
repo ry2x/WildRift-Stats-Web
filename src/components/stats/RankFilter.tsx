@@ -29,7 +29,7 @@ export const RankFilter: FC<RankFilterProps> = ({
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left"
+        className="w-full flex justify-between items-center text-left px-4"
       >
         <div className="flex items-center gap-2">
           <GlobeAltIcon className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -47,7 +47,7 @@ export const RankFilter: FC<RankFilterProps> = ({
       <div
         className={`mt-4 transition-all duration-200 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 px-4">
           {' '}
           {Object.entries(rankDisplayNames).map(([rank, name]) => (
             <button
