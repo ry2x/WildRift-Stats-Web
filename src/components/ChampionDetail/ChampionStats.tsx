@@ -20,9 +20,7 @@ export const ChampionStats = memo(function ChampionStats({
   if (!stats || Object.keys(stats).length === 0) {
     return (
       <div className="mt-8">
-        <h2 className="text-xl font-semibold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
-          統計情報
-        </h2>
+        <h2 className="text-xl font-semibold base-card-title-text">統計情報</h2>
         <p className="mt-4 text-slate-700 dark:text-slate-300">
           このチャンピオンの統計情報はありません。
         </p>
@@ -35,9 +33,7 @@ export const ChampionStats = memo(function ChampionStats({
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
-        統計情報
-      </h2>
+      <h2 className="text-2xl font-bold base-card-title-text">統計情報</h2>
 
       {/* Rank Filter Card */}
       <div className="base-card mt-4 rounded-lg py-4 duration-300 shadow-lg shadow-blue-500/5">
@@ -75,7 +71,7 @@ export const ChampionStats = memo(function ChampionStats({
                   key={lane}
                   className="base-card group rounded-lg p-6 duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5"
                 >
-                  <h3 className="text-lg font-medium bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent group-hover:to-blue-600 dark:group-hover:to-blue-300 transition-all flex items-center justify-between">
+                  <h3 className="text-lg font-medium base-card-title-text group-hover:to-blue-600 dark:group-hover:to-blue-300 transition-all flex items-center justify-between">
                     <span>{laneDisplayNames[lane]}レーン</span>
                     <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">
                       <CalendarIcon className="w-3.5 h-3.5 inline-block mr-1 mb-1" />
@@ -86,9 +82,7 @@ export const ChampionStats = memo(function ChampionStats({
                   <div className="mt-4 space-y-4">
                     {/* Win Rate */}
                     <div className="group/stat flex justify-between items-center p-2 rounded-md transition-all hover:bg-slate-50 dark:hover:bg-white/5">
-                      <span className="text-slate-600 dark:text-slate-300 group-hover/stat:text-blue-600 dark:group-hover/stat:text-white transition-colors">
-                        勝率
-                      </span>
+                      <span className="stats-card-title-text">勝率</span>
                       <span
                         className={`font-medium ${getWinRateColor(parseFloat(laneStats.win_rate_percent))} group-hover/stat:scale-110 transition-transform`}
                       >
@@ -97,20 +91,16 @@ export const ChampionStats = memo(function ChampionStats({
                     </div>
 
                     {/* Pick Rate */}
-                    <div className="group/stat flex justify-between items-center p-2 rounded-md transition-all hover:bg-slate-50 dark:hover:bg-white/5">
-                      <span className="text-slate-600 dark:text-slate-300 group-hover/stat:text-blue-600 dark:group-hover/stat:text-white transition-colors">
-                        ピック率
-                      </span>
+                    <div className="group/stat stats-card-title">
+                      <span className="stats-card-title-text">ピック率</span>
                       <span className="font-medium text-blue-600 dark:text-blue-300 group-hover/stat:scale-110 transition-transform">
                         {laneStats.appear_rate_percent}%
                       </span>
                     </div>
 
                     {/* Ban Rate */}
-                    <div className="group/stat flex justify-between items-center p-2 rounded-md transition-all hover:bg-slate-50 dark:hover:bg-white/5">
-                      <span className="text-slate-600 dark:text-slate-300 group-hover/stat:text-blue-600 dark:group-hover/stat:text-white transition-colors">
-                        バン率
-                      </span>
+                    <div className="group/stat stats-card-title">
+                      <span className="stats-card-title-text">バン率</span>
                       <span className="font-medium text-blue-600 dark:text-purple-300 group-hover/stat:scale-110 transition-transform">
                         {laneStats.forbid_rate_percent}%
                       </span>
@@ -118,10 +108,8 @@ export const ChampionStats = memo(function ChampionStats({
 
                     {/* Strength Index */}
                     <div className="mt-2 pt-2 border-t border-slate-200/50 dark:border-white/10">
-                      <div className="group/stat flex justify-between items-center p-2 rounded-md transition-all hover:bg-slate-50 dark:hover:bg-white/5">
-                        <span className="text-slate-600 dark:text-slate-300 group-hover/stat:text-blue-600 dark:group-hover/stat:text-white transition-colors">
-                          強さ指数
-                        </span>
+                      <div className="group/stat stats-card-title">
+                        <span className="stats-card-title-text">強さ指数</span>
                         <span
                           className={`font-medium ${getStrengthColor(parseInt(laneStats.strength, 10))} group-hover/stat:scale-110 transition-transform`}
                         >

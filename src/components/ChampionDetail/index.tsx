@@ -200,7 +200,7 @@ export function ChampionDetailContainer({
                   {champion.roles.map(role => (
                     <span
                       key={role}
-                      className="inline-block rounded bg-linear-to-r from-blue-100/80 to-indigo-100/80 dark:from-blue-800/90 dark:to-indigo-800/90 px-3 py-1.5 text-sm font-medium text-blue-800 dark:text-blue-100 backdrop-blur-sm border border-blue-200/20 dark:border-blue-400/20"
+                      className="role-badge px-3 py-1.5 text-sm font-medium"
                     >
                       {roleLabels[role]}
                     </span>
@@ -212,7 +212,7 @@ export function ChampionDetailContainer({
                   {champion.lanes.map(lane => (
                     <span
                       key={lane}
-                      className="inline-block rounded bg-linear-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-800/90 dark:to-pink-800/90 px-3 py-1.5 text-sm font-medium text-purple-800 dark:text-purple-100 backdrop-blur-sm border border-purple-200/20 dark:border-purple-400/20"
+                      className="lane-badge px-3 py-1.5 text-sm font-medium "
                     >
                       {laneLabels[lane]}
                     </span>

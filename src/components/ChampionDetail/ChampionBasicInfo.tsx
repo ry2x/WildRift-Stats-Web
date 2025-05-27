@@ -27,7 +27,7 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
     <div className="grid gap-6 md:grid-cols-2">
       {/* Description Card */}
       <div className="base-card p-6 duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
-        <h2 className="text-xl font-semibold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
+        <h2 className="text-xl font-semibold base-card-title-text">
           チャンピオン説明
         </h2>
         <p className="mt-4 leading-relaxed text-slate-700 dark:text-slate-300">
@@ -39,7 +39,7 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
       <div className="space-y-4">
         {/* Champion Stats */}
         <div className="base-card p-6 duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
-          <h2 className="text-xl font-semibold bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent mb-4">
+          <h2 className="text-xl font-semibold base-card-title-text mb-4">
             チャンピオンのステータス
           </h2>
 
@@ -111,7 +111,7 @@ export const ChampionBasicInfo = memo(function ChampionBasicInfo({
           <div className="base-card p-6 duration-300 hover:border-blue-300/50 dark:hover:border-blue-500/30 shadow-lg shadow-blue-500/5">
             <div className="flex items-center gap-3">
               <span className="text-2xl">⭐</span>
-              <span className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent font-medium">
+              <span className="base-card-title-text font-medium">
                 今週のフリーチャンピオンです！
               </span>
             </div>
