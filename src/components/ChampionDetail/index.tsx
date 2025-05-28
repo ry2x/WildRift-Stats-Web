@@ -141,7 +141,7 @@ export function ChampionDetailContainer({
             src={splashUrl}
             alt={`${champion.name} splash art`}
             className="object-top object-cover transform scale-105 transition-transform duration-1000 hover:scale-110"
-            priority
+            priority={true}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             fallbackSrc={fallbackUrl}
           />
