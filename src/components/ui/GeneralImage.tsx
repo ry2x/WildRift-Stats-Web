@@ -34,6 +34,8 @@ export function GeneralImage({
         const target = e.currentTarget as HTMLImageElement;
         target.src = fallbackSrc;
       }}
+      //Disable Next.js image optimization for this component
+      unoptimized={true}
     />
   );
 }
